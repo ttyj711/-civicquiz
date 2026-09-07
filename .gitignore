@@ -1,0 +1,35 @@
+# dependencies
+node_modules/
+
+# builds
+dist/
+.output/
+.nitro/
+.cache/
+*.tsbuildinfo
+
+# env
+.env
+.env.local
+.env.*.local
+
+# logs
+*.log
+logs/
+
+# editor / os
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# taro / miniprogram
+apps/miniapp/dist/
+apps/miniapp/.temp/
+apps/miniapp/.swc/
+
+# cloudbase
+cloudbase/
+.cloudbase/
+tcb-*.json
+.pgdata/
