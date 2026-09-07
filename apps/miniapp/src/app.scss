@@ -1,0 +1,178 @@
+// 全局样式与设计 token（页面通用）
+// 双主题：A 舒缓绿（默认）/ B 暖棕，通过页面根节点追加 .theme-b 切换
+page {
+  background: #F7F8F6;
+  font-size: 28px;
+  color: #2C3E35;
+}
+
+// ---- 主题 token：方案 A 苔绿 ----
+.page {
+  // 主色 / 强调色
+  --primary: #4A7C59;
+  --primary-deep: #3E6A4C;
+  --primary-soft: #EAF2EC;
+  --accent: #E8A87C;
+  --accent-soft: #FBF1E8;
+  // 底色 / 面板
+  --bg: #F7F8F6;
+  --panel: #FFFFFF;
+  --panel-soft: #F2F5F1;
+  --border: #EAEFEA;
+  // 文字
+  --text: #2C3E35;
+  --text-sub: #7C8B82;
+  --text-faint: #A0AAA4;
+  // 状态
+  --danger: #C4766F;
+  --danger-soft: #F8EEED;
+  --success: #4A7C59;
+  --success-soft: #EAF2EC;
+  --warn: #C9995B;
+  --warn-soft: #FAF3E7;
+  --info: #6B8E9E;
+  --info-soft: #ECF3F5;
+
+  min-height: 100vh;
+  padding: 24px 20px;
+  padding-bottom: calc(40px + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+  background: var(--bg);
+  color: var(--text);
+}
+
+// ---- 主题 token：方案 B 暖棕 ----
+.page.theme-b {
+  --primary: #8C6D53;
+  --primary-deep: #745842;
+  --primary-soft: #F3EDE4;
+  --accent: #D98863;
+  --accent-soft: #FAEEE6;
+  --bg: #FAF6F0;
+  --panel-soft: #F4EEE5;
+  --border: #EFE8DD;
+  --text: #3E342B;
+  --text-sub: #94897C;
+  --text-faint: #B0A697;
+  --danger: #BC7268;
+  --danger-soft: #F7EDEA;
+  --success: #6E8F5E;
+  --success-soft: #EFF3E9;
+  --warn: #C08F52;
+  --warn-soft: #F8F0E2;
+  --info: #8A7B9E;
+  --info-soft: #F1EDF6;
+}
+
+.card {
+  background: var(--panel);
+  border-radius: 24px;
+  padding: 28px 24px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 14px rgba(74, 124, 89, 0.05);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+}
+
+.between {
+  justify-content: space-between;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.sub {
+  color: var(--text-sub);
+  font-size: 24px;
+  line-height: 1.5;
+}
+
+.primary {
+  color: var(--primary);
+}
+
+.page-title {
+  display: block;
+  font-size: 36px;
+  font-weight: 700;
+  margin: 8px 4px 24px;
+  color: var(--text);
+}
+
+// 通用空状态（温情文案）
+.empty {
+  padding: 80px 0;
+  text-align: center;
+  color: var(--text-faint);
+  font-size: 26px;
+  line-height: 1.8;
+}
+.empty-line { display: block; }
+.empty-dots {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.edot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  opacity: 0.55;
+}
+.edot.d1 { background: var(--primary); }
+.edot.d2 { background: var(--accent); }
+.edot.d3 { background: var(--info); }
+
+// 主按钮统一按压反馈
+.button-hover {
+  opacity: 0.85;
+  transform: scale(0.98);
+}
+
+.mt8 { margin-top: 8px; }
+.mt16 { margin-top: 16px; }
+.mt24 { margin-top: 24px; }
+.mb16 { margin-bottom: 16px; }
+.flex1 { flex: 1; min-width: 0; }
+.center { text-align: center; }
+
+// 卡片行内按钮：Taro Button 默认块级全宽，在 flex 行里会把文本列挤成竖排
+.go-btn {
+  width: fit-content;
+  flex-shrink: 0;
+}
+
+// 浅底主色按钮（列表卡片操作）
+.soft-btn {
+  width: fit-content;
+  flex-shrink: 0;
+  background: var(--primary-soft);
+  color: var(--primary);
+  border: none;
+  font-size: 26px;
+  font-weight: 600;
+  border-radius: 28px;
+  padding: 0 32px;
+  line-height: 2.4;
+}
+
+// [标签] 前缀徽章（浅绿底深绿字）
+.tag-badge {
+  display: inline-block;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--primary);
+  background: var(--primary-soft);
+  border-radius: 8px;
+  padding: 2px 12px;
+  margin-right: 12px;
+  vertical-align: middle;
+}

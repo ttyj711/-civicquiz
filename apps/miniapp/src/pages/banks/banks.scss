@@ -1,0 +1,40 @@
+.page-title {
+  display: block;
+  font-size: 36px;
+  font-weight: 700;
+  margin: 8px 4px 24px;
+}
+.bank-card {
+  display: flex;
+  align-items: center;
+}
+.soft-go {
+  margin-left: 16px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  border: none;
+  font-size: 26px;
+  font-weight: 600;
+  border-radius: 24px;
+  padding: 0 30px;
+  width: fit-content;
+  flex-shrink: 0;
+  line-height: 2.4;
+}
+.go-btn-hover {
+  opacity: 0.85;
+}
+
+// 标题左侧浅底圆形图标
+.card-ico {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--primary-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  margin-right: 20px;
+  flex-shrink: 0;
+}

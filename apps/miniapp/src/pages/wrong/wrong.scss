@@ -1,0 +1,9 @@
+// 标题样式用全局 .page-title，不再覆盖
+.head-bar { margin-bottom: 16px; }
+.review-all { background: var(--primary); color: #fff; font-size: 24px; border-radius: 30px; }
+.wrong-content { font-size: 28px; line-height: 1.5; display: block; }
+.mastered-tag { margin-left: 16px; color: var(--success); font-size: 22px; }
+.ops { margin-top: 12px; gap: 12px; }
+.op { font-size: 22px; border-radius: 26px; padding: 0 20px; }
+.op.ok { background: var(--success-soft); color: var(--success); border: 2px solid #CBE3D3; }
+.op.del { background: #fff; color: var(--text-faint); border: 2px solid var(--border); }

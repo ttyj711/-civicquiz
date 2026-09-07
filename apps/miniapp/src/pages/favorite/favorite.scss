@@ -1,0 +1,6 @@
+// 标题样式用全局 .page-title，不再覆盖
+.head-bar { margin-bottom: 16px; }
+.practice-all { background: var(--primary); color: #fff; font-size: 24px; border-radius: 30px; }
+.fav-content { font-size: 28px; line-height: 1.5; display: block; }
+.op { margin-top: 12px; font-size: 22px; border-radius: 26px; padding: 0 20px; }
+.op.del { background: #fff; color: var(--text-faint); border: 2px solid var(--border); }

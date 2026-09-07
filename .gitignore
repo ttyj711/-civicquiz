@@ -1,0 +1,39 @@
+# dependencies
+node_modules/
+
+# builds
+dist/
+.output/
+.nitro/
+.cache/
+*.tsbuildinfo
+
+# env
+.env
+.env.local
+.env.*.local
+
+# logs
+*.log
+logs/
+
+# editor / os
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# taro / miniprogram
+apps/miniapp/dist/
+apps/miniapp/.temp/
+apps/miniapp/.swc/
+
+# cloudbase（部署产物忽略，但保留迁移 SQL 入库版本管理）
+cloudbase/*
+!cloudbase/migrations/
+.cloudbase/
+tcb-*.json
+.pgdata/
+
+# workbuddy workspace data
+.workbuddy/

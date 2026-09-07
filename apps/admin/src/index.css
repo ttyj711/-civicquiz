@@ -1,0 +1,45 @@
+/* 全局基础样式（主题 token 由 ConfigProvider 驱动，这里做重置与细节打磨） */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  background: #f5f7fa;
+  color: #1f2329;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 键盘可达性：统一的焦点可见环 */
+:focus-visible {
+  outline: 2px solid #1677ff;
+  outline-offset: 2px;
+}
+
+/* 细滚动条 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #d4d7dd;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b8bcc4;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::selection {
+  background: rgba(22, 119, 255, 0.15);
+}

@@ -1,0 +1,116 @@
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(160deg, #FFFFFF 20%, var(--primary-soft) 100%);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding-bottom: 32px;
+}
+.hero .title {
+  color: var(--text);
+  font-size: 36px;
+  position: relative;
+}
+.hero .sub {
+  color: var(--text-sub);
+  position: relative;
+}
+
+// 右上角装饰光斑（不参与交互）
+.hero-circle {
+  position: absolute;
+  top: -70px;
+  right: -50px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--primary-soft), transparent 70%);
+  pointer-events: none;
+}
+
+// 学情数据：浅底微型卡三等分，数字用主色
+.hero-stats {
+  display: flex;
+  gap: 16px;
+  margin-top: 28px;
+  position: relative;
+}
+.hero-chip {
+  flex: 1;
+  background: var(--panel-soft);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.chip-num {
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--primary);
+}
+.chip-label {
+  font-size: 22px;
+  color: var(--text-sub);
+  margin-top: 4px;
+}
+
+.quick-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.quick-item {
+  width: calc(50% - 8px);
+  background: var(--panel-soft);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+}
+.quick-head {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+.quick-name {
+  font-size: 28px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+}
+.actions .btn-primary {
+  flex: 1;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 44px;
+  font-size: 30px;
+  font-weight: 600;
+  box-shadow: 0 6px 16px rgba(74, 124, 89, 0.22);
+}
+.actions .btn-ghost {
+  flex: 1;
+  background: var(--primary-soft);
+  color: var(--primary);
+  border: none;
+  border-radius: 44px;
+  font-size: 30px;
+  font-weight: 600;
+}

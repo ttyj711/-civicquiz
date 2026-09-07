@@ -1,0 +1,52 @@
+.result-page { padding-top: 48px; }
+
+// 环形正确率：外圈 conic 进度 + 内圆白底盖出环形
+.ring {
+  width: 230px;
+  height: 230px;
+  border-radius: 50%;
+  margin: 12px auto 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ring-inner {
+  width: 176px;
+  height: 176px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 2px 8px rgba(44, 62, 53, 0.06);
+}
+.ring-acc {
+  font-size: 64px;
+  font-weight: 800;
+  color: var(--primary);
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.ring-label { font-size: 22px; color: var(--text-sub); margin-top: 4px; }
+
+.cheer {
+  display: block;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.nums { margin-top: 28px; }
+.num { font-size: 40px; font-weight: 700; display: block; }
+.num.ok { color: var(--success); }
+.num.no { color: var(--danger); }
+
+.btn { border-radius: 44px; margin-top: 20px; font-size: 30px; font-weight: 600; }
+.btn.primary {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(74, 124, 89, 0.25);
+}
+.btn.ghost { background: #fff; color: var(--primary); border: 2px solid var(--primary); }

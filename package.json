@@ -1,0 +1,24 @@
+{
+  "name": "civicquiz",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev:server": "pnpm --filter @civicquiz/server dev",
+    "build:server": "pnpm --filter @civicquiz/server build",
+    "dev:admin": "pnpm --filter @civicquiz/admin dev",
+    "build:admin": "pnpm --filter @civicquiz/admin build"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@tarojs/cli": "^4.2.1"
+  },
+  "dependencies": {
+    "@embedded-postgres/windows-x64": "18.1.0-beta.15",
+    "bcryptjs": "^3.0.3",
+    "embedded-postgres": "18.1.0-beta.15",
+    "node-pty": "^1.1.0",
+    "pg": "^8.23.0"
+  }
+}

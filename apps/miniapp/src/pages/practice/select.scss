@@ -1,0 +1,33 @@
+.mode-item {
+  padding: 20px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+.mode-item.active {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+}
+.mode-name {
+  font-size: 28px;
+  font-weight: 600;
+}
+.count-chip {
+  padding: 12px 28px;
+  border: 2px solid var(--border);
+  border-radius: 36px;
+  margin-right: 16px;
+  font-size: 26px;
+}
+.count-chip.active {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-soft);
+}
+.start-btn {
+  background: var(--primary);
+  color: #fff;
+  border-radius: 44px;
+  font-size: 30px;
+  margin-top: 16px;
+}

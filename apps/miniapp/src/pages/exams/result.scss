@@ -1,0 +1,10 @@
+.score-card { padding: 60px 24px; }
+.score { font-size: 120px; font-weight: 700; color: var(--primary); line-height: 1.2; display: block; }
+.tag { display: inline-block; background: var(--warn-soft); color: var(--warn); font-size: 22px; padding: 4px 16px; border-radius: 30px; }
+.num { font-size: 44px; font-weight: 700; display: block; }
+.num.ok { color: var(--success); }
+.num.no { color: var(--danger); }
+.actions { margin-top: 24px; }
+.btn { border-radius: 44px; margin-top: 16px; font-size: 30px; }
+.btn.primary { background: var(--primary); color: #fff; }
+.btn.ghost { background: #fff; color: var(--primary); border: 2px solid var(--primary); }
