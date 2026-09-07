@@ -98,18 +98,20 @@
 }
 .actions .btn-primary {
   flex: 1;
-  background: var(--primary);
-  color: #fff;
+  width: auto;
+  background: var(--primary-soft);
+  color: var(--primary);
   border-radius: 44px;
   font-size: 30px;
   font-weight: 600;
-  box-shadow: 0 6px 16px rgba(74, 124, 89, 0.22);
+  border: none;
 }
 .actions .btn-ghost {
   flex: 1;
-  background: var(--primary-soft);
+  width: auto;
+  background: #fff;
   color: var(--primary);
-  border: none;
+  border: 2px solid var(--primary-soft);
   border-radius: 44px;
   font-size: 30px;
   font-weight: 600;

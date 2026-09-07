@@ -170,7 +170,7 @@ export default function PracticeQuiz() {
       )}
 
       <View className='row between bottom-bar'>
-        <Button className='nav-btn' hoverClass='button-hover' disabled={idx === 0} onClick={() => setIdx(idx - 1)}>上一题</Button>
+        {idx > 0 && <Button className='nav-btn' hoverClass='button-hover' onClick={() => setIdx(idx - 1)}>上一题</Button>}
         <Button className='fav-btn' hoverClass='button-hover' onClick={() => void favToggle()}>{isFav ? '★ 已收藏' : '☆ 收藏'}</Button>
         {idx < questions.length - 1
           ? <Button className='nav-btn primary' hoverClass='button-hover' onClick={() => setIdx(idx + 1)}>下一题</Button>

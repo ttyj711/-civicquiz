@@ -1,8 +1,8 @@
-.exam-page { height: 100vh; display: flex; flex-direction: column; background: #fff; }
-.top { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid var(--panel-soft); }
+.exam-page { height: 100vh; display: flex; flex-direction: column; background: var(--bg); }
+.top { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid var(--border); background: #fff; }
 .timer { font-size: 36px; font-weight: 700; color: var(--text); }
 .timer.danger { color: var(--danger); }
-.sheet-btn { background: var(--primary-soft); color: var(--primary); font-size: 26px; border-radius: 30px; }
+.sheet-btn { background: var(--primary-soft); color: var(--primary); font-size: 26px; border-radius: 30px; width: fit-content; }
 
 .body { flex: 1; padding: 24px; box-sizing: border-box; }
 .q-head { color: var(--text-sub); font-size: 24px; margin-bottom: 16px; }
@@ -13,11 +13,11 @@
 .foot {
   display: flex; gap: 16px; padding: 16px 24px;
   padding-bottom: calc(16px + env(safe-area-inset-bottom));
-  border-top: 1px solid var(--panel-soft); background: #fff;
+  border-top: 1px solid var(--border); background: #fff;
 }
-.f-btn { flex: 1; background: #fff; color: var(--text); border: 2px solid var(--border); font-size: 28px; border-radius: 40px; }
-.f-btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
-.f-btn.danger { background: var(--danger); color: #fff; border-color: var(--danger); }
+.f-btn { flex: 1; background: #fff; color: var(--text); border: 2px solid var(--border); font-size: 28px; border-radius: 40px; line-height: 2.3; }
+.f-btn.primary { background: var(--primary-soft); color: var(--primary); border-color: var(--primary-soft); }
+.f-btn.danger { background: var(--danger-soft); color: var(--danger); border-color: var(--danger-soft); }
 
 .sheet-mask { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); z-index: 100; display: flex; align-items: flex-end; }
 .sheet { width: 100%; background: #fff; border-radius: 24px 24px 0 0; padding: 32px 24px; }
@@ -35,4 +35,4 @@
 }
 .sheet-cell.done { background: var(--primary); color: #fff; }
 .sheet-cell.cur { border: 3px solid var(--warn-soft); }
-.submit-btn { background: var(--danger); color: #fff; border-radius: 44px; font-size: 30px; }
+.submit-btn { background: var(--danger-soft); color: var(--danger); border-radius: 44px; font-size: 30px; border: none; line-height: 2.5; font-weight: 600; }

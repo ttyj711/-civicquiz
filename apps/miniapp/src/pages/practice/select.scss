@@ -25,9 +25,12 @@
   background: var(--primary-soft);
 }
 .start-btn {
-  background: var(--primary);
-  color: #fff;
+  background: var(--primary-soft);
+  color: var(--primary);
   border-radius: 44px;
   font-size: 30px;
   margin-top: 16px;
+  border: none;
+  line-height: 2.5;
+  font-weight: 600;
 }

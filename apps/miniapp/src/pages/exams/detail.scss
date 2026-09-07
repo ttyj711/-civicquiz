@@ -1,4 +1,13 @@
 .info-line { display: flex; }
 .info-num { font-size: 44px; font-weight: 700; color: var(--primary); display: block; }
 .tips .sub { display: block; }
-.start-btn { background: var(--primary); color: #fff; border-radius: 44px; font-size: 32px; margin-top: 12px; }
+.start-btn {
+  background: var(--primary-soft);
+  color: var(--primary);
+  border-radius: 44px;
+  font-size: 32px;
+  margin-top: 12px;
+  border: none;
+  line-height: 2.5;
+  font-weight: 600;
+}

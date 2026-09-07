@@ -56,7 +56,7 @@ export default function ExamReviewPage() {
       </View>
 
       <View className='row between'>
-        <Button className='nav-btn' hoverClass='button-hover' disabled={cur === 0} onClick={() => setCur(cur - 1)}>上一题</Button>
+        {cur > 0 && <Button className='nav-btn' hoverClass='button-hover' onClick={() => setCur(cur - 1)}>上一题</Button>}
         {cur < qs.length - 1
           ? <Button className='nav-btn primary' hoverClass='button-hover' onClick={() => setCur(cur + 1)}>下一题</Button>
           : <Button className='nav-btn ghost' hoverClass='button-hover' onClick={() => Taro.navigateBack()}>返回</Button>}

@@ -94,7 +94,7 @@ export default function ExamQuizPage() {
     myAnswer ? (Array.isArray(myAnswer) ? myAnswer.includes(key) : myAnswer === key) ? 'picked' : '' : ''
 
   return (
-    <View className='exam-page'>
+    <View className={'exam-page ' + themeCls}>
       <View className='top'>
         <Text className={`timer ${remaining < 300 ? 'danger' : ''}`}>{fmt(remaining)}</Text>
         <Button className='sheet-btn' hoverClass='button-hover' onClick={() => setShowSheet(true)}>{Object.keys(answers).length}/{questions.length}</Button>
@@ -110,7 +110,7 @@ export default function ExamQuizPage() {
       </ScrollView>
 
       <View className='foot'>
-        <Button className='f-btn' hoverClass='button-hover' disabled={idx === 0} onClick={() => setIdx(idx - 1)}>上一题</Button>
+        {idx > 0 && <Button className='f-btn' hoverClass='button-hover' onClick={() => setIdx(idx - 1)}>上一题</Button>}
         {idx < questions.length - 1
           ? <Button className='f-btn primary' hoverClass='button-hover' onClick={() => setIdx(idx + 1)}>下一题</Button>
           : <Button className='f-btn danger' hoverClass='button-hover' onClick={confirmSubmit}>交卷</Button>}
