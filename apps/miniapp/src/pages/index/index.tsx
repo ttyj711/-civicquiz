@@ -84,7 +84,7 @@ export default function IndexPage() {
       </View>
 
       <View className='actions'>
-        <Button className='btn-primary' hoverClass='button-hover' onClick={() => Taro.switchTab({ url: '/pages/banks/banks' })}>开始刷题</Button>
+        <Button className='btn-ghost' hoverClass='button-hover' onClick={() => Taro.switchTab({ url: '/pages/banks/banks' })}>开始刷题</Button>
         <Button className='btn-ghost' hoverClass='button-hover' onClick={() => Taro.switchTab({ url: '/pages/exams/exams' })}>模拟考试</Button>
       </View>
     </View>

@@ -1,8 +1,21 @@
 .score-text { color: var(--primary); font-weight: 600; }
 .q-content { font-size: 32px; line-height: 1.6; display: block; margin-bottom: 20px; }
 // 选项样式已抽至 components/QuestionOptions.scss（.qopt）
-.analysis { background: var(--bg); border-radius: 12px; padding: 16px; }
-.analysis .title { font-size: 26px; }
+// 解析卡：浅底分区 + 正文易读排版（与刷题页保持一致）
+.analysis { background: var(--bg); border-radius: 12px; padding: 20px 24px; }
+.analysis .title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: 2px;
+}
+.analysis .sub {
+  font-size: 29px;      // 原为全局 24px，偏小
+  line-height: 1.9;     // 原 1.5 偏挤
+  letter-spacing: 1px;
+  color: var(--text);   // 原 text-sub 对比度低
+  display: block;
+}
 .nav-btn { flex: 1; margin: 0 8px; background: #fff; color: var(--text); border: 2px solid var(--border); border-radius: 36px; font-size: 26px; line-height: 2.3; }
 .nav-btn.primary { background: var(--primary-soft); color: var(--primary); border-color: var(--primary-soft); }
 .nav-btn.ghost { background: #fff; color: var(--primary); border-color: var(--primary-soft); }

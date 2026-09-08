@@ -95,10 +95,14 @@
   display: flex;
   gap: 16px;
   margin-top: 8px;
+  align-items: stretch; // 两个按钮等高（Taro Button 有默认内边距，stretch 兜底）
 }
 .actions .btn-primary {
   flex: 1;
   width: auto;
+  height: 88px;
+  padding: 0;
+  margin: 0;
   background: var(--primary-soft);
   color: var(--primary);
   border-radius: 44px;
@@ -109,6 +113,9 @@
 .actions .btn-ghost {
   flex: 1;
   width: auto;
+  height: 88px;
+  padding: 0;
+  margin: 0;
   background: #fff;
   color: var(--primary);
   border: 2px solid var(--primary-soft);
