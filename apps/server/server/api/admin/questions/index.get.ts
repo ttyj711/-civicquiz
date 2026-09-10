@@ -23,9 +23,11 @@ export default defineHandler(async (event) => {
   if (q.keyword) add('q.content ILIKE ?', `%${q.keyword}%`)
 
   const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : ''
-  const total = await query(`SELECT COUNT(*)::int AS n FROM question q ${whereSql}`, params)
-  const rows = await query(
-    `SELECT q.id, q.bank_id, q.category_id, q.type, q.content, q.analysis, q.difficulty, q.score, q.status, q.created_at,
+  // COUNT 与数据查询互相独立，并行执行（减少一半往返等待）
+  const [total, rows] = await Promise.all([
+    query(`SELECT COUNT(*)::int AS n FROM question q ${whereSql}`, params),
+    query(
+      `SELECT q.id, q.bank_id, q.category_id, q.type, q.content, q.analysis, q.difficulty, q.score, q.status, q.created_at,
             b.name AS bank_name, c.name AS category_name,
             (SELECT json_agg(json_build_object('optionKey', o.option_key, 'content', o.content) ORDER BY o.sort)
              FROM question_option o WHERE o.question_id = q.id) AS options,
@@ -37,8 +39,9 @@ export default defineHandler(async (event) => {
      ${whereSql}
      ORDER BY q.id DESC
      LIMIT ${size} OFFSET ${(page - 1) * size}`,
-    params
-  )
+      params
+    ),
+  ])
   return {
     total: total.rows[0].n,
     page,

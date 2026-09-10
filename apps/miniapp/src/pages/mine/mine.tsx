@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Taro, { useDidShow } from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 import { fetchStats, fetchUserExams, type UserExamItem, type UserStats } from '../../services/api'
@@ -30,7 +30,7 @@ export default function MinePage() {
       Taro.showToast({ title: (e as Error).message || '加载失败', icon: 'none' })
     }
   }
-  useEffect(() => { load() }, [])
+  // useDidShow 首次展示即触发，无需再叠加 useEffect（避免首屏双请求）
   useDidShow(() => { load() })
 
   // 金刚区：浅底块 + 语义色数字

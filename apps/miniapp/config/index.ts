@@ -33,7 +33,8 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
     framework: 'react',
     compiler: 'webpack5',
     cache: {
-      enable: false // Webpack 持久化缓存配置，建议开启。默认配置请参考：https://docs.taro.zone/docs/config-detail#cache
+      // 开启 webpack 持久化缓存：二次构建只重编译改动模块，显著提升开发效率
+      enable: true
     },
     mini: {
       postcss: {
@@ -82,6 +83,19 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
       },
       webpackChain(chain) {
         chain.resolve.plugin('tsconfig-paths').use(TsconfigPathsPlugin)
+        // 拆分第三方依赖到独立 chunk：业务代码迭代不影响 vendors 的浏览器/CDN 缓存
+        chain.optimization.splitChunks({
+          chunks: 'all',
+          cacheGroups: {
+            vendors: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+              priority: 20,
+              chunks: 'all',
+              reuseExistingChunk: true,
+            },
+          },
+        })
       }
     },
     rn: {

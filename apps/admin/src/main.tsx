@@ -10,7 +10,15 @@ import { antdTheme } from './theme'
 import './index.css'
 
 const queryClient = new QueryClient({
-  defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false } },
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+      // 30s 内视为新鲜数据，避免路由来回切换时重复请求；写入后由 mutation 的 invalidate 精确刷新
+      staleTime: 30_000,
+      gcTime: 5 * 60_000,
+    },
+  },
 })
 
 createRoot(document.getElementById('root')!).render(

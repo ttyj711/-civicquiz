@@ -2,8 +2,13 @@ import pg from 'pg'
 
 const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL || 'postgresql://civicquiz:civicquiz@127.0.0.1:55432/civicquiz',
-  max: 10,
+  max: Number(process.env.PG_POOL_MAX || 20),
   idleTimeoutMillis: 30_000,
+  // 取连接超时：池满时快速失败，避免请求无限排队
+  connectionTimeoutMillis: 5_000,
+  // 单条语句超时：防止慢查询长期占用连接
+  statement_timeout: 10_000,
+  query_timeout: 10_000,
 })
 
 export function query<T = pg.QueryResultRow>(text: string, params?: unknown[]) {

@@ -95,6 +95,29 @@ docs/screenshots/
 
 15 张核心表：`sys_admin`、`sys_user`、`question_bank`、`question_category`、`question`、`question_option`、`question_answer`、`practice`、`user_question_record`、`user_wrong_question`、`user_favorite_question`、`exam`、`exam_question`（组卷快照）、`user_exam`、`user_exam_answer`（答案 JSONB，答题记录只追加不覆盖）。
 
+## 性能设计
+
+### 数据库
+- **索引策略**：高频过滤/排序列均建组合索引（`question_bank(status, sort)`、`question_category(bank_id, sort)`、`exam(status, created_at DESC)`、`user_exam(user_id, status)`、`user_question_record(user_id, answered_at DESC)` 等）
+- **无冗余索引**：答案表 `(user_exam_id, question_id)` 唯一约束与索引重复项已合并清理，降低答题写入的索引维护开销
+- **减少往返**：学情统计由「5 条 SQL 串行」改为「单条 CTE 聚合」，1 次往返拿全量数据
+- **并行查询**：管理端分页列表的 `COUNT` 与数据查询并行执行，等待时间减半
+- **连接池**：`max=20`（可用 `PG_POOL_MAX` 调整），含取连接超时 5s、语句/查询超时 10s，慢查询不会拖垮整个服务
+
+### 前端
+- **H5 分包**：第三方依赖抽为独立 `vendors` chunk（约 363KB），业务代码改动不影响其缓存；业务 `app.js` 从 1.32MB 降至 **33KB**，页面按需加载（3–8KB/页）
+- **小程序**：主包仅约 500KB，远低于 2MB 限制
+- **请求去重**：页面统一使用 `useDidShow` 触发加载（避免 `useEffect` + `useDidShow` 双触发导致的首屏重复请求）
+- **冷启动兜底**：请求层在无 token 时先等待静默登录完成，避免首屏 401 空数据
+- **管理端缓存**：React Query `staleTime=30s`，路由来回切换不重复请求，写操作后由 mutation 精确失效刷新
+
+### 构建
+- Taro 开启 webpack 持久化缓存，二次构建只重编译改动模块
+
+### 部署建议
+- 静态资源与 API 响应启用 **gzip / brotli**（Nginx 或 CDN），并配置长缓存 + 文件名 hash
+- 生产环境收紧 CORS 白名单（当前 `*` 仅用于联调）
+
 ## 验收
 
 ```bash

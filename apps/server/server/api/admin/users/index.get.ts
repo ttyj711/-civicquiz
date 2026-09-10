@@ -18,9 +18,11 @@ export default defineHandler(async (event) => {
   if (q.keyword) add('(u.nickname ILIKE ? OR u.openid ILIKE ?)', `%${q.keyword}%`)
 
   const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : ''
-  const total = await query(`SELECT COUNT(*)::int AS n FROM sys_user u ${whereSql}`, params)
-  const rows = await query(
-    `SELECT u.id, u.nickname, u.avatar_url, u.status, u.last_login_at, u.created_at,
+  // COUNT 与数据查询互相独立，并行执行
+  const [total, rows] = await Promise.all([
+    query(`SELECT COUNT(*)::int AS n FROM sys_user u ${whereSql}`, params),
+    query(
+      `SELECT u.id, u.nickname, u.avatar_url, u.status, u.last_login_at, u.created_at,
             (SELECT COUNT(*)::int FROM user_question_record r WHERE r.user_id = u.id) AS answered,
             (SELECT COUNT(*)::int FROM user_question_record r WHERE r.user_id = u.id AND r.correct) AS correct,
             (SELECT COUNT(*)::int FROM user_exam ue WHERE ue.user_id = u.id AND ue.status = 2) AS exams
@@ -28,8 +30,9 @@ export default defineHandler(async (event) => {
      ${whereSql}
      ORDER BY u.id DESC
      LIMIT ${size} OFFSET ${(page - 1) * size}`,
-    params
-  )
+      params
+    ),
+  ])
   return {
     total: total.rows[0].n,
     page,

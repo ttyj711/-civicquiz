@@ -13,12 +13,14 @@ export default defineHandler(async (event) => {
 
   const cond = examId ? 'WHERE ue.exam_id = $1' : ''
   const params = examId ? [examId] : []
-  const total = await query(
-    `SELECT COUNT(*)::int AS n FROM user_exam ue ${cond}`,
-    params as unknown[]
-  )
-  const rows = await query(
-    `SELECT ue.id, ue.exam_id, ue.user_id, ue.status, ue.score, ue.total_score,
+  // COUNT 与数据查询互相独立，并行执行
+  const [total, rows] = await Promise.all([
+    query(
+      `SELECT COUNT(*)::int AS n FROM user_exam ue ${cond}`,
+      params as unknown[]
+    ),
+    query(
+      `SELECT ue.id, ue.exam_id, ue.user_id, ue.status, ue.score, ue.total_score,
             ue.correct_count, ue.wrong_count, ue.unanswered_count, ue.start_time, ue.submit_time, ue.duration,
             e.name AS exam_name, u.nickname
      FROM user_exam ue
@@ -27,8 +29,9 @@ export default defineHandler(async (event) => {
      ${cond}
      ORDER BY ue.start_time DESC
      LIMIT ${size} OFFSET ${(page - 1) * size}`,
-    params as unknown[]
-  )
+      params as unknown[]
+    ),
+  ])
   return {
     total: total.rows[0].n,
     page,
