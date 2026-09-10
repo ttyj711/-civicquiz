@@ -24,13 +24,5 @@
   color: var(--primary);
   background: var(--primary-soft);
 }
-.start-btn {
-  background: var(--primary-soft);
-  color: var(--primary);
-  border-radius: 44px;
-  font-size: 30px;
-  margin-top: 16px;
-  border: none;
-  line-height: 2.5;
-  font-weight: 600;
-}
+// 主按钮复用全局 .btn-primary，仅补充上间距
+.btn-primary { margin-top: 16px; }

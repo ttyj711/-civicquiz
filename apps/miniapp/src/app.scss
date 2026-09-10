@@ -166,42 +166,45 @@ page {
   line-height: 2.4;
 }
 
-// 全宽主行动按钮（柔和主题：浅底 + 主色字，不再高饱和实色块）
-.btn-primary {
+// 全宽按钮基类：统一边框宽度与行高，保证不同变体等高
+.btn-primary,
+.btn-ghost,
+.btn-danger {
   width: 100%;
-  background: var(--primary-soft);
-  color: var(--primary);
-  border: none;
+  box-sizing: border-box;
+  border-width: 2px;
+  border-style: solid;
   border-radius: 44px;
   font-size: 30px;
   font-weight: 600;
-  line-height: 2.5;
+  line-height: 1;
+  padding: 25px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// 全宽主行动按钮（柔和主题：浅底 + 主色字 + 主色描边）
+.btn-primary {
+  background: var(--primary-soft);
+  color: var(--primary);
+  border-color: var(--primary);
 }
 .btn-primary[disabled],
 .btn-primary:disabled { opacity: 0.5; }
 
-// 全宽次级按钮（白底主色字 + 浅描边）
+// 全宽次级按钮（白底主色字 + 极浅描边）
 .btn-ghost {
-  width: 100%;
   background: #fff;
   color: var(--primary);
-  border: 2px solid var(--primary-soft);
-  border-radius: 44px;
-  font-size: 30px;
-  font-weight: 600;
-  line-height: 2.5;
+  border-color: var(--primary-soft);
 }
 
 // 全宽警示按钮（柔红：交卷等终结性操作）
 .btn-danger {
-  width: 100%;
   background: var(--danger-soft);
   color: var(--danger);
-  border: none;
-  border-radius: 44px;
-  font-size: 30px;
-  font-weight: 600;
-  line-height: 2.5;
+  border-color: var(--danger-soft);
 }
 
 // [标签] 前缀徽章（浅绿底深绿字）

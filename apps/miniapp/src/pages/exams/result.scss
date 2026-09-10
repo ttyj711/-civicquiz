@@ -5,6 +5,20 @@
 .num.ok { color: var(--success); }
 .num.no { color: var(--danger); }
 .actions { margin-top: 24px; }
-.btn { border-radius: 44px; margin-top: 16px; font-size: 30px; font-weight: 600; border: none; line-height: 2.5; }
-.btn.primary { background: var(--primary-soft); color: var(--primary); }
-.btn.ghost { background: #fff; color: var(--primary); border: 2px solid var(--primary-soft); }
+.btn {
+  width: 100%;
+  box-sizing: border-box;
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 44px;
+  margin-top: 16px;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 25px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn.primary { background: var(--primary-soft); color: var(--primary); border-color: var(--primary); }
+.btn.ghost { background: #fff; color: var(--primary); border-color: var(--primary-soft); }

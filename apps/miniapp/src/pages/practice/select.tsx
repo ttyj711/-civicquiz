@@ -69,7 +69,7 @@ export default function PracticeSelect() {
         </View>
       </View>
 
-      <Button className='start-btn' loading={loading} onClick={start}>开始练习</Button>
+      <Button className='btn-primary' loading={loading} onClick={start}>开始练习</Button>
     </View>
   )
 }

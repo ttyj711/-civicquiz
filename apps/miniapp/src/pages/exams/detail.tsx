@@ -51,7 +51,7 @@ export default function ExamDetailPage() {
         <Text className='sub mt8'>到时会自动交卷，请合理安排时间。</Text>
       </View>
 
-      <Button className='start-btn' hoverClass='button-hover' onClick={start}>开始考试</Button>
+      <Button className='btn-primary' hoverClass='button-hover' onClick={start}>开始考试</Button>
     </View>
   )
 }
