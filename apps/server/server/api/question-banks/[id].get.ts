@@ -14,7 +14,7 @@ export default defineHandler(async (event) => {
   if (!r.rows[0]) throw createError({ statusCode: 404, message: '题库不存在' })
   const bank = r.rows[0]
 
-  const cats = await query(
+  const cats = await query<CatRow>(
     `SELECT id, parent_id, name FROM question_category WHERE bank_id = $1 AND status = 1 ORDER BY sort, id`,
     [id]
   )

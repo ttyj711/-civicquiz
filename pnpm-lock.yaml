@@ -221,6 +221,9 @@ importers:
 
   apps/server:
     dependencies:
+      '@civicquiz/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       bcryptjs:
         specifier: ^3.0.3
         version: 3.0.3
@@ -233,6 +236,9 @@ importers:
       xlsx:
         specifier: ^0.18.5
         version: 0.18.5
+      zod:
+        specifier: ^3.23.0
+        version: 3.25.76
     devDependencies:
       '@types/node':
         specifier: latest
@@ -1098,7 +1104,6 @@ packages:
   '@embedded-postgres/windows-x64@18.1.0-beta.15':
     resolution: {integrity: sha512-xLIAuYqkUK1Hk93Bsn1eGAbpEEDgt4UHpg/fA1Vgj66rOJTDf1Q783rWNIBZ7kZP9FtgSnAk4gJhLRMNgkakMg==}
     engines: {node: '>=16'}
-    cpu: [x64]
     os: [win32]
 
   '@emotion/hash@0.8.0':

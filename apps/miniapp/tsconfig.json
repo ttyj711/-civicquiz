@@ -17,6 +17,8 @@
     "jsx": "react-jsx",
     "allowJs": true,
     "resolveJsonModule": true,
+    // 跳过第三方 .d.ts 检查（@tarojs/components 的类型声明存在历史问题，非本仓库代码）
+    "skipLibCheck": true,
     "typeRoots": [
       "node_modules/@types"
     ],

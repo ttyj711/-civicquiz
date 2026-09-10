@@ -1,21 +1,14 @@
 import { defineHandler, createError } from 'nitro/h3'
-import { requireUser, numParam, readJson } from '../../../utils/auth'
+import { answerSchema } from '@civicquiz/shared'
+import { requireUser, numParam } from '../../../utils/auth'
+import { readValidated } from '../../../utils/validate'
 import { query, tx } from '../../../utils/db'
 import { judge, normalizeKeys } from '../../../utils/judge'
-
-interface AnswerBody {
-  questionId: number
-  answer: string | string[]
-  duration?: number
-}
 
 export default defineHandler(async (event) => {
   const user = await requireUser(event)
   const practiceId = numParam(event)
-  const body = await readJson<AnswerBody>(event)
-  if (!body.questionId || body.answer === undefined) {
-    throw createError({ statusCode: 400, message: '缺少 questionId 或 answer' })
-  }
+  const body = await readValidated(event, answerSchema)
 
   // 会话归属校验
   const p = await query(

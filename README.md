@@ -114,9 +114,15 @@ docs/screenshots/
 ### 构建
 - Taro 开启 webpack 持久化缓存，二次构建只重编译改动模块
 
+### 健壮性与安全
+- **请求体校验**：核心接口（登录 / 开始练习 / 提交答案 / 交卷）统一用 `packages/shared` 的 zod schema 校验，字段级错误信息直接返回前端；ID 类字段兼容数字与数字字符串
+- **统一错误响应**：所有错误均返回 `{ error: true, message }`，4xx 返回可展示的业务提示，5xx 在生产环境隐藏堆栈与内部路径（仅服务端记录日志）
+- **启动自检**：生产环境缺少 `JWT_SECRET` / `DATABASE_URL` 时直接拒绝启动，避免带着可预测默认密钥上线
+- **ID 类型一致**：数据库 bigint 主键在连接层统一转为 number，避免 `"1"` 与 `1` 在前端比较时踩坑
+
 ### 部署建议
 - 静态资源与 API 响应启用 **gzip / brotli**（Nginx 或 CDN），并配置长缓存 + 文件名 hash
-- 生产环境收紧 CORS 白名单（当前 `*` 仅用于联调）
+- 生产环境必配：`JWT_SECRET`、`DATABASE_URL`、`WX_APPID`、`WX_APP_SECRET`；并收紧 CORS 白名单（当前 `*` 仅用于联调）
 
 ## 验收
 

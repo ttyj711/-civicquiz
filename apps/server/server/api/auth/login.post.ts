@@ -1,18 +1,19 @@
 import { defineHandler, createError } from 'nitro/h3'
+import { z } from 'zod'
+import { loginSchema } from '@civicquiz/shared'
 import { code2session } from '../../utils/wechat'
 import { signToken } from '../../utils/jwt'
 import { query, tx } from '../../utils/db'
-import { readJson } from '../../utils/auth'
+import { readValidated } from '../../utils/validate'
 
-interface LoginBody {
-  code?: string
-  nickname?: string
-  avatarUrl?: string
-}
+/** 复用 shared 的 code 校验，扩展可选的昵称/头像 */
+const loginBodySchema = loginSchema.extend({
+  nickname: z.string().max(64).optional(),
+  avatarUrl: z.string().max(512).optional(),
+})
 
 export default defineHandler(async (event) => {
-  const body = await readJson<LoginBody>(event)
-  if (!body.code) throw createError({ statusCode: 400, message: '缺少 code' })
+  const body = await readValidated(event, loginBodySchema)
 
   const session = await code2session(body.code)
 

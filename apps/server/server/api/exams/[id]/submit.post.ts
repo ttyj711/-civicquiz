@@ -1,19 +1,15 @@
 import { defineHandler, createError } from 'nitro/h3'
-import { requireUser, numParam, readJson } from '../../../utils/auth'
+import { examSubmitSchema } from '@civicquiz/shared'
+import { requireUser, numParam } from '../../../utils/auth'
+import { readValidated } from '../../../utils/validate'
 import { query, tx } from '../../../utils/db'
 import { judge } from '../../../utils/judge'
-
-interface SubmitBody {
-  userExamId: number
-  clientDuration?: number
-}
 
 /** 交卷：服务端统一判分（含到时自动交卷场景） */
 export default defineHandler(async (event) => {
   const user = await requireUser(event)
   const examId = numParam(event)
-  const body = await readJson<SubmitBody>(event)
-  if (!body.userExamId) throw createError({ statusCode: 400, message: '缺少 userExamId' })
+  const body = await readValidated(event, examSubmitSchema)
 
   const ue = await query(
     `SELECT ue.id, ue.status, ue.start_time, e.duration, e.total_score
