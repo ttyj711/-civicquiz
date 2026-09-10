@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import { getToken, setToken } from '../services/request'
+import { getToken, setToken, setReloginHook } from '../services/request'
 import { loginByCode } from '../services/api'
 
 const USER_KEY = 'civicquiz_miniapp_user'
@@ -19,12 +19,17 @@ export async function ensureLogin(): Promise<MiniUser> {
 
   loginPromise = (async () => {
     let code = ''
-    try {
-      const r = await Taro.login()
-      code = r.code
-    } catch {
-      // H5 联调降级：固定 dev code 便于服务端建同一用户
+    // H5 无微信登录环境：直接使用 dev code（Taro.login 在 H5 下不可用，会挂起/失败）
+    if (process.env.TARO_ENV === 'h5') {
       code = 'dev_h5_' + (Taro.getStorageSync('dev_uid') || '001')
+    } else {
+      try {
+        const r = await Taro.login()
+        code = r.code
+      } catch {
+        // 微信登录失败降级：固定 dev code 便于本地联调
+        code = 'dev_h5_' + (Taro.getStorageSync('dev_uid') || '001')
+      }
     }
     const res = await loginByCode(code)
     setToken(res.token)
@@ -35,3 +40,6 @@ export async function ensureLogin(): Promise<MiniUser> {
 
   return loginPromise
 }
+
+// 向请求层注册重登钩子：任意接口遇到 401 时静默重登并重试一次
+setReloginHook(() => ensureLogin())

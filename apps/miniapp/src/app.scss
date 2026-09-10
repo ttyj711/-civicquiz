@@ -200,6 +200,21 @@ page {
   border-color: var(--primary-soft);
 }
 
+// 全宽按钮统一高度：border 差异会让 btn-ghost 比 btn-primary 高 4px，
+// 并排时会出现「一高一低」。此处强制等高 + border 计入盒模型 + flex 垂直居中。
+.btn-primary,
+.btn-ghost,
+.btn-danger {
+  box-sizing: border-box;
+  height: 88px;
+  padding: 0;
+  margin: 0;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 // 全宽警示按钮（柔红：交卷等终结性操作）
 .btn-danger {
   background: var(--danger-soft);

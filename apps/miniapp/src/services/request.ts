@@ -28,7 +28,21 @@ interface Opts {
   params?: Record<string, string | number | undefined>
 }
 
-export async function api<T = unknown>(path: string, opts: Opts = {}): Promise<T> {
+/**
+ * 401 自动重登钩子：由 utils/auth.ts 注册 ensureLogin，
+ * 避免 request ↔ auth 循环依赖。深度页直开（分享链接/冷启动竞态）无 token 时自动补登录并重试一次。
+ */
+let reloginHook: (() => Promise<unknown>) | null = null
+export function setReloginHook(fn: () => Promise<unknown>) {
+  reloginHook = fn
+}
+
+export async function api<T = unknown>(path: string, opts: Opts = {}, retried = false): Promise<T> {
+  // 冷启动竞态兜底：无 token 时先等待静默登录完成再发请求（登录接口本身除外）
+  if (!getToken() && !path.startsWith('/api/auth/login') && reloginHook && !retried) {
+    try { await reloginHook() } catch { /* 登录失败则继续，交由下方 401 分支处理 */ }
+  }
+
   let url = BASE + path
   if (opts.params) {
     const qs = Object.entries(opts.params)
@@ -53,6 +67,15 @@ export async function api<T = unknown>(path: string, opts: Opts = {}): Promise<T
   const st = res.statusCode
   if (st === 401 && !path.startsWith('/api/auth/login')) {
     clearToken()
+    // 未重试过则静默重登后重试一次
+    if (!retried && reloginHook) {
+      try {
+        await reloginHook()
+        return await api<T>(path, opts, true)
+      } catch {
+        throw new ApiError(401, '登录已失效')
+      }
+    }
     throw new ApiError(401, '登录已失效')
   }
   const data = res.data as { message?: string } | T

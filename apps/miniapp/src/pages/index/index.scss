@@ -97,19 +97,21 @@
   margin-top: 8px;
   align-items: stretch;
 }
-// 两个按钮等高：边框宽度一致 + 行高固定 + 内容垂直居中
+// 两个按钮等高：固定高度 + 统一 2px 边框 + flex 居中（消除 Taro Button 默认内边距干扰）
 .actions .btn-primary,
 .actions .btn-ghost {
   flex: 1;
   width: auto;
+  height: 88px;
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
   border-width: 2px;
   border-style: solid;
   border-radius: 44px;
   font-size: 30px;
   font-weight: 600;
   line-height: 1;
-  padding: 25px 0;
   display: flex;
   align-items: center;
   justify-content: center;

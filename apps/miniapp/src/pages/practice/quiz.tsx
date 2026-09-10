@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Taro, { useRouter } from '@tarojs/taro'
-import { View, Text, Button } from '@tarojs/components'
+import { View, Text, Button, Input } from '@tarojs/components'
 import {
   answerPractice, fetchPracticeQuestions, finishPractice, addFavorite, removeFavorite, fetchFavorites,
   type AnswerRes, type Question,
@@ -15,7 +15,10 @@ interface Answered {
   correct: boolean
   answerKeys?: string[]
   analysis?: string | null
+  duration?: number
 }
+
+const typeLabel = (t: Question['type']) => (t === 'SINGLE' ? '单选题' : t === 'MULTIPLE' ? '多选题' : '判断题')
 
 export default function PracticeQuiz() {
   const themeCls = useThemeClass()
@@ -28,6 +31,9 @@ export default function PracticeQuiz() {
   const [favs, setFavs] = useState<Set<number>>(new Set())
   const [loading, setLoading] = useState(true)
   const [judging, setJudging] = useState(false)
+  const [notes, setNotes] = useState<Record<number, string>>({})
+  const [noteDraft, setNoteDraft] = useState('')
+  const qStartAt = useRef<number>(Date.now())
 
   useEffect(() => {
     fetchPracticeQuestions(pid).then((r) => {
@@ -35,11 +41,18 @@ export default function PracticeQuiz() {
       const rec: Record<number, Answered> = {}
       for (const a of r.answered) {
         if (a.correct !== null) {
-          rec[a.questionId] = { userAnswer: a.userAnswer ?? [], correct: a.correct }
+          rec[a.questionId] = {
+            userAnswer: a.userAnswer ?? [],
+            correct: a.correct,
+            answerKeys: a.answerKeys ?? [],
+            analysis: a.analysis ?? null,
+            duration: a.duration ?? undefined,
+          }
         }
       }
       setResults(rec)
       setLoading(false)
+      qStartAt.current = Date.now()
     }).catch((e) => {
       Taro.showToast({ title: (e as Error).message || '加载失败', icon: 'none' })
       setLoading(false)
@@ -53,10 +66,16 @@ export default function PracticeQuiz() {
   const isMulti = q?.type === 'MULTIPLE'
   const isFav = qid != null && favs.has(qid)
 
+  // 本场练习累计正确率（用于三列统计第二列）
+  const doneCount = Object.values(results).length
+  const correctTotal = Object.values(results).filter((r) => r.correct).length
+  const sessionAccuracy = doneCount ? Math.round((correctTotal / doneCount) * 100) : 0
+
   const applyResult = (questionId: number, answer: string | string[], res: AnswerRes) => {
+    const duration = Math.max(1, Math.round((Date.now() - qStartAt.current) / 1000))
     setResults((prev) => ({
       ...prev,
-      [questionId]: { userAnswer: answer, correct: res.correct, answerKeys: res.answerKeys, analysis: res.analysis },
+      [questionId]: { userAnswer: answer, correct: res.correct, answerKeys: res.answerKeys, analysis: res.analysis, duration },
     }))
     setPending((prev) => ({ ...prev, [questionId]: answer }))
   }
@@ -120,11 +139,25 @@ export default function PracticeQuiz() {
     }
   }
 
+  const goNav = (nextIdx: number) => {
+    setIdx(nextIdx)
+    qStartAt.current = Date.now()
+    setNoteDraft(notes[questions[nextIdx]?.id] ?? '')
+  }
+
+  const saveNote = () => {
+    if (!qid) return
+    const t = noteDraft.trim()
+    if (!t) { Taro.showToast({ title: '先写点什么吧', icon: 'none' }); return }
+    setNotes((prev) => ({ ...prev, [qid]: t }))
+    Taro.showToast({ title: '笔记已保存', icon: 'success' })
+  }
+
   const doFinish = async () => {
     try {
       const r = await finishPractice(pid)
       Taro.redirectTo({
-        url: `/pages/practice/result?correct=${r.correctCount}&total=${r.totalCount}&wrong=${r.wrongCount}&accuracy=${r.accuracy}`,
+        url: `/pages/practice/result?practiceId=${pid}&correct=${r.correctCount}&total=${r.totalCount}&wrong=${r.wrongCount}&accuracy=${r.accuracy}`,
       })
     } catch (e) {
       Taro.showToast({ title: (e as Error).message || '结束失败', icon: 'none' })
@@ -138,12 +171,17 @@ export default function PracticeQuiz() {
   const optState = (key: string): OptState =>
     !answered && isMulti && curPending.includes(key) ? 'picked' : optCls(key)
 
+  // 答题后统计：易错项 = 答错时展示用户选错的第一个 key
+  const res = results[qid]
+  const pickedArr = Array.isArray(res?.userAnswer) ? (res!.userAnswer as string[]) : res ? [res.userAnswer as string] : []
+  const wrongKey = res && !res.correct ? pickedArr[0] : ''
+
   return (
     <View className={'page ' + themeCls}>
-      {/* 顶部：题号 + 题型 + 进度条 */}
+      {/* 顶部：题号进度 + 题型徽章 + 进度条 */}
       <View className='row between topbar'>
-        <Text className='sub'>第 {idx + 1} / {questions.length} 题</Text>
-        <Text className='type-tag'>{q.type === 'SINGLE' ? '单选' : q.type === 'MULTIPLE' ? '多选' : '判断'}</Text>
+        <Text className='idx'>第 {idx + 1} / {questions.length} 题</Text>
+        <Text className='type-tag'>{typeLabel(q.type)}</Text>
       </View>
       <View className='progress'>
         <View className='progress-fill' style={{ width: `${((idx + 1) / questions.length) * 100}%` }} />
@@ -153,7 +191,7 @@ export default function PracticeQuiz() {
         <Text className='q-content'>{q.content}</Text>
       </View>
 
-      <View className='card'>
+      <View className='card card-options'>
         <QuestionOptions options={q.options} getState={optState}
           onSelect={(key) => onOptionTap(key)} />
 
@@ -162,18 +200,70 @@ export default function PracticeQuiz() {
         )}
       </View>
 
-      {answered && results[qid].analysis && (
+      {answered && (
+        <View className='card'>
+          {/* 正确答案 / 你的答案 对比 */}
+          <View className='answer-compare'>
+            <View className='compare-item'>
+              <Text>正确答案</Text>
+              <Text className={'compare-value ' + (res.correct ? 'ok' : 'no')}>{(res.answerKeys ?? []).join(',')}</Text>
+            </View>
+            <View className='compare-item'>
+              <Text>你的答案</Text>
+              <Text className={'compare-value ' + (res.correct ? 'ok' : 'no')}>{pickedArr.join(',') || '未作答'}</Text>
+            </View>
+          </View>
+
+          {/* 三列统计：答题时间 / 正确率 / 易错项 */}
+          <View className='stats-row'>
+            <View className='stat-item'>
+              <Text className='stat-num green'>{res.duration ?? '-'}<Text className='stat-unit'>秒</Text></Text>
+              <Text className='stat-label'>答题时间</Text>
+            </View>
+            <View className='stat-item'>
+              <Text className='stat-num green'>{sessionAccuracy}%</Text>
+              <Text className='stat-label'>本次正确率</Text>
+            </View>
+            <View className='stat-item'>
+              <Text className={'stat-num ' + (wrongKey ? 'red' : '')}>{wrongKey || '无'}</Text>
+              <Text className='stat-label'>易错项</Text>
+            </View>
+          </View>
+        </View>
+      )}
+
+      {answered && res.analysis && (
         <View className='card analysis'>
-          <Text className='title mb16'>解析</Text>
-          <Text className='analysis-text'>{results[qid].analysis}</Text>
+          <View className='analysis-head'>解析</View>
+          <Text className='analysis-text'>{res.analysis}</Text>
+
+          {/* 耎点：题目分类 */}
+          <View className='kaodian'>
+            <Text className='label'>考点</Text>
+            <Text className='kaodian-tag'>{q.categoryName || '综合'}</Text>
+          </View>
+
+          {/* 题目整理：笔记 */}
+          <View className='note-section'>
+            <Text className='note-title'>题目整理</Text>
+            <View className='note-row'>
+              <Input
+                className='note-input'
+                value={noteDraft}
+                placeholder='记下你的思考…'
+                onInput={(e) => setNoteDraft(e.detail.value)}
+              />
+              <Button className='note-btn' hoverClass='button-hover' onClick={saveNote}>添加笔记</Button>
+            </View>
+          </View>
         </View>
       )}
 
       <View className='row between bottom-bar'>
-        {idx > 0 && <Button className='nav-btn' hoverClass='button-hover' onClick={() => setIdx(idx - 1)}>上一题</Button>}
+        {idx > 0 && <Button className='nav-btn' hoverClass='button-hover' onClick={() => goNav(idx - 1)}>上一题</Button>}
         <Button className='fav-btn' hoverClass='button-hover' onClick={() => void favToggle()}>{isFav ? '★ 已收藏' : '☆ 收藏'}</Button>
         {idx < questions.length - 1
-          ? <Button className='nav-btn primary' hoverClass='button-hover' onClick={() => setIdx(idx + 1)}>下一题</Button>
+          ? <Button className='nav-btn primary' hoverClass='button-hover' onClick={() => goNav(idx + 1)}>下一题</Button>
           : <Button className='nav-btn primary' hoverClass='button-hover' onClick={() => void doFinish()}>完成</Button>}
       </View>
     </View>

@@ -17,19 +17,19 @@
 .qopt.wrong { border-color: var(--danger); background: var(--danger-soft); }
 .qopt.dim { opacity: 0.5; }
 
-// 字母芯片（chip 变体）
+// 字母芯片（chip 变体）：未选 = 浅底品牌色字母（对齐参考图2）
 .qopt-key {
-  width: 44px;
-  height: 44px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   background: var(--panel-soft);
-  color: var(--text-sub);
+  color: var(--primary);
   font-size: 26px;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 16px;
+  margin-right: 18px;
   flex-shrink: 0;
   transition: all 0.2s;
 }

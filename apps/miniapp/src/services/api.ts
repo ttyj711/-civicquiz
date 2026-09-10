@@ -33,6 +33,8 @@ export interface Question {
   content: string
   difficulty: number
   score?: number
+  categoryId?: number
+  categoryName?: string | null
   options: QuestionOption[]
 }
 
@@ -104,7 +106,14 @@ export interface PracticeQuestions {
     status: number
   }
   questions: Question[]
-  answered: Array<{ questionId: number; userAnswer: string | string[] | null; correct: boolean | null }>
+  answered: Array<{
+    questionId: number
+    userAnswer: string | string[] | null
+    correct: boolean | null
+    answerKeys?: string[]
+    analysis?: string | null
+    duration?: number | null
+  }>
 }
 
 export interface AnswerRes {

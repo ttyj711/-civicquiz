@@ -1,6 +1,4 @@
-.topbar { margin-bottom: 12px; }
-
-// 答题进度条：细线式，随题号推进
+// === 顶部进度条：细线式（图2顶部） ===
 .progress {
   height: 6px;
   background: var(--border);
@@ -15,21 +13,168 @@
   transition: width 0.3s ease;
 }
 
+// === 顶部栏：左「第 N / M 题」，右浅蓝「单选题」徽章（图2） ===
+.topbar { margin-bottom: 12px; }
+.topbar .idx { color: var(--text-sub); font-size: 26px; }
 .type-tag {
-  background: var(--primary-soft);
+  background: #E8F1FB;
   color: var(--primary);
   font-size: 22px;
   font-weight: 600;
-  padding: 6px 18px;
-  border-radius: 20px;
+  padding: 4px 16px;
+  border-radius: 8px;
 }
+
+// === 题目内容：大字粗体、宽松行高（图1/2） ===
 .q-content {
   font-size: 32px;
-  line-height: 1.6;
+  font-weight: 600;
+  line-height: 1.75;
+  color: var(--text);
+  display: block;
+  letter-spacing: 0.5px;
 }
 
-// 选项样式已抽至 components/QuestionOptions.scss（.qopt）
+// === 选项样式：选项卡自带，基础样式见 components/QuestionOptions.scss ===
+// 这里只覆盖「答题页 chip 变体」：圆环字母稍大
+.card-options { padding-top: 4px; }
 
+// === 答题后：正确答案 / 你的答案 并排对比（图1中部） ===
+.answer-compare {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 28px;
+  padding: 16px 0 4px;
+  border-top: 1px dashed var(--border);
+}
+.compare-item { display: flex; align-items: center; font-size: 26px; color: var(--text-sub); }
+.compare-value { font-weight: 700; margin-left: 10px; letter-spacing: 2px; }
+.compare-value.ok { color: var(--success); }
+.compare-value.no { color: var(--danger); }
+
+// === 时间统计三列：答题时间 / 全站正确率 / 易错项（图1） ===
+.stats-row {
+  display: flex;
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.stat-item {
+  flex: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.stat-num {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+.stat-unit { font-size: 22px; font-weight: 500; margin-left: 2px; color: var(--text-sub); }
+.stat-num.green { color: var(--success); }
+.stat-num.red { color: var(--danger); }
+.stat-label { font-size: 22px; color: var(--text-sub); margin-top: 6px; }
+
+// === 解析区：绿点 + 标题 + 深色正文（图1） ===
+.analysis {
+  padding: 0;
+  border-left: none;
+}
+.analysis-head {
+  display: flex;
+  align-items: center;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 16px;
+  letter-spacing: 2px;
+}
+.analysis-head::before {
+  content: '';
+  width: 14px;
+  height: 14px;
+  background: var(--primary);
+  border-radius: 50%;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+.analysis-text {
+  display: block;
+  font-size: 29px;
+  line-height: 1.9;
+  letter-spacing: 1px;
+  color: var(--text);
+}
+
+// === 考点：橙色小标签（图1） ===
+.kaodian {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+.kaodian .label {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text);
+}
+.kaodian-tag {
+  font-size: 22px;
+  color: var(--primary);
+  background: var(--primary-soft);
+  border-radius: 6px;
+  padding: 4px 14px;
+  font-weight: 600;
+}
+.kaodian-source { font-size: 22px; color: var(--text-sub); }
+
+// === 题目整理 + 笔记（图1底部） ===
+.note-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.note-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+.note-row {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+}
+.note-input {
+  flex: 1;
+  min-width: 0;      // 允许收缩，防止被按钮挤压
+  width: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: 26px;
+  background: #fff;
+}
+.note-btn {
+  width: auto;        // Taro Button 默认块级全宽，必须锁死
+  flex-shrink: 0;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 0 28px;
+  font-size: 26px;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// === 多选题提交按钮 ===
 .confirm-btn {
   margin-top: 8px;
   background: var(--primary-soft);
@@ -41,25 +186,27 @@
   line-height: 2.4;
 }
 
-// 解析卡：左侧竖线强调
-.analysis {
-  border-left: 6px solid var(--primary);
-}
-.analysis .title { font-size: 26px; color: var(--primary); }
-.analysis-text { color: var(--text-sub); line-height: 1.7; display: block; }
-
+// === 底部导航条：上一题 / 收藏 / 下一题（三等宽、等高） ===
 .bottom-bar {
   margin-top: 24px;
-  align-items: center;
+  align-items: stretch;
+  gap: 16px;
 }
 .nav-btn {
-  width: 200px;
+  flex: 1;
+  width: auto;
+  height: 88px;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
   background: #fff;
   color: var(--text);
   border: 2px solid var(--border);
   font-size: 26px;
-  border-radius: 40px;
-  line-height: 2.3;
+  border-radius: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .nav-btn.primary {
   background: var(--primary-soft);
@@ -67,12 +214,19 @@
   border-color: var(--primary-soft);
 }
 .fav-btn {
-  width: 180px;
+  flex: 1;
+  width: auto;
+  height: 88px;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
   background: var(--warn-soft);
   color: var(--text);
   border: 2px solid var(--warn-soft);
   font-size: 24px;
   font-weight: 600;
-  border-radius: 40px;
-  line-height: 2.3;
+  border-radius: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

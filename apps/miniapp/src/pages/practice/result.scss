@@ -1,18 +1,18 @@
-.result-page { padding-top: 48px; }
+.result-page { padding-top: 24px; }
 
-// 环形正确率：外圈 conic 进度 + 内圆白底盖出环形
+// === 圆环（图3：蓝色进度环，中心答对数） ===
 .ring {
   width: 230px;
   height: 230px;
   border-radius: 50%;
-  margin: 12px auto 24px;
+  margin: 12px auto 20px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .ring-inner {
-  width: 176px;
-  height: 176px;
+  width: 178px;
+  height: 178px;
   border-radius: 50%;
   background: #fff;
   display: flex;
@@ -37,30 +37,147 @@
   color: var(--text);
   margin-bottom: 8px;
 }
+.meta-row { margin-top: 6px; }
 
-.nums { margin-top: 28px; }
-.num { font-size: 40px; font-weight: 700; display: block; }
-.num.ok { color: var(--success); }
-.num.no { color: var(--danger); }
-
-.btn {
-  width: 100%;
-  box-sizing: border-box;
-  border-width: 2px;
-  border-style: solid;
-  border-radius: 44px;
-  margin-top: 20px;
+// === 区块标题（图3：图标 + 标题） ===
+.sec-head {
+  display: flex;
+  align-items: center;
   font-size: 30px;
-  font-weight: 600;
-  line-height: 1;
-  padding: 25px 0;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+.sec-head.blue::before {
+  content: '';
+  width: 14px; height: 14px;
+  background: var(--primary);
+  border-radius: 4px;
+  margin-right: 12px;
+}
+.sec-head.orange::before {
+  content: '';
+  width: 14px; height: 14px;
+  background: var(--accent);
+  border-radius: 4px;
+  margin-right: 12px;
+}
+.sec-head.plain::before {
+  content: '';
+  width: 14px; height: 14px;
+  background: #7B68EE;
+  border-radius: 50%;
+  margin-right: 12px;
+}
+
+// === 考试情况：四列数字（图3） ===
+.grid4 { display: flex; }
+.g4-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.g4-num {
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.g4-num.ok { color: var(--success); }
+.g4-num.no { color: var(--danger); }
+.g4-unit { font-size: 22px; font-weight: 500; color: var(--text-sub); margin-left: 2px; }
+.g4-label { font-size: 22px; color: var(--text-sub); margin-top: 6px; }
+.total-time { margin-top: 20px; padding-top: 16px; border-top: 1px dashed var(--border); }
+
+// 分类行
+.cat-row .sub { display: block; }
+
+// === 答题卡：图例 + 数字圆网格（图3） ===
+.legend {
+  display: flex;
+  gap: 28px;
+  margin-bottom: 20px;
+}
+.lg-item { display: flex; align-items: center; }
+.lg-dot { width: 18px; height: 18px; border-radius: 50%; margin-right: 8px; }
+.lg-dot.unset { background: var(--border); }
+.lg-dot.ok { background: var(--success); }
+.lg-dot.no { background: var(--danger); }
+.lg-text { font-size: 22px; color: var(--text-sub); }
+
+.sheet {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+.sheet-num {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
 }
-.btn.primary {
+.sheet-num.ok { background: var(--success); }
+.sheet-num.no { background: var(--danger); }
+.sheet-num.unset { background: var(--border); color: var(--text-sub); }
+
+// === 能力变化：考点 + 星级（图3） ===
+.ability { margin-bottom: 24px; }
+.ability-head { display: flex; align-items: center; margin-bottom: 12px; }
+.ability-bar {
+  width: 8px;
+  height: 30px;
+  background: var(--accent);
+  border-radius: 4px;
+  margin-right: 12px;
+}
+.ability-name { font-size: 28px; font-weight: 700; color: var(--text); }
+.ability-stars {
+  display: flex;
+  align-items: center;
   background: var(--primary-soft);
-  color: var(--primary);
-  border-color: var(--primary);
+  border-radius: 12px;
+  padding: 12px 20px;
 }
-.btn.ghost { background: #fff; color: var(--primary); border-color: var(--primary-soft); }
+.star { font-size: 30px; color: var(--border); margin-right: 6px; }
+.star.on { color: var(--warn); }
+.ability-check {
+  margin-left: auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--success);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+// === 底部双按钮（图3：全部解析 / 错题解析） ===
+.foot-btns { margin-top: 28px; gap: 20px; }
+.foot-btn {
+  flex: 1;
+  height: 92px;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  border-radius: 44px;
+  font-size: 30px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+}
+.foot-btn.ghost { background: #fff; color: var(--primary); border: 2px solid var(--primary-soft); }
+.foot-btn.solid { background: var(--primary-soft); color: var(--primary); border: 2px solid var(--primary); }
+
