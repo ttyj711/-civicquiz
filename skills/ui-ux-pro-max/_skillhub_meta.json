@@ -1,0 +1,19 @@
+{
+  "slug": "ui-ux-pro-max",
+  "name": "UI/UX Pro Max",
+  "version": "0.1.0",
+  "installedAt": 1789032263114,
+  "source": "skillhub",
+  "namespace": "clawhub_xobi667",
+  "canonicalName": "@clawhub_xobi667/ui-ux-pro-max",
+  "iconSource": "https://cloudcache.tencent-cloud.com/qcloud/ui/static/other_external_resource/60484da4-21ca-4044-b2ff-2b3a1ddcd63f.png",
+  "labels": {
+    "requires_api_key": "false"
+  },
+  "description_zh": "提供 UI/UX 设计智能与实现指导，帮助打造精美界面。适用于 UI 设计、UX 流程、信息架构、视觉风格、设计系统/标记、组件规格、文案/微文案、无障碍及前端 UI（HTML/CSS/JS、React、Next.js、Vue、Svelte、Tailwind）生成/评审/改进。工作流包括：①新 UI 布局与样式生成；②现有 UI/UX 改进；③设计系统标记和组件规范产出；④ UX 建议转化为代码变更。",
+  "description_en": "UI/UX design intelligence and implementation guidance for building polished interfaces. Use when the user asks for UI design, UX flows, information architecture, visual style direction, design systems/tokens, component specs, copy/microcopy, accessibility, or to generate/critique/refine frontend UI (HTML/CSS/JS, React, Next.js, Vue, Svelte, Tailwind). Includes workflows for (1) generating new UI layouts and styling, (2) improving existing UI/UX, (3) producing design-system tokens and component guidelines, and (4) turning UX recommendations into concrete code changes.",
+  "installs": 73245,
+  "iconLocalPath": "C:\\Users\\z\\.workbuddy\\skills\\ui-ux-pro-max__skillhub\\_icon.png",
+  "iconDownloadedFrom": "https://cloudcache.tencent-cloud.com/qcloud/ui/static/other_external_resource/60484da4-21ca-4044-b2ff-2b3a1ddcd63f.png",
+  "installedContentHash": "sha256:1f1e6774881e6756c17726380eeef8aeb75a6c3a0447e33bbbbf5a4a70455205"
+}
