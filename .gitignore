@@ -33,6 +33,9 @@ cloudbase/*
 !cloudbase/migrations/
 .cloudbase/
 tcb-*.json
+
+# agent skills（手动 vendored 的第三方技能，可重新 npx skills add 安装，不入库）
+.agents/
 .pgdata/
 
 # workbuddy workspace data
