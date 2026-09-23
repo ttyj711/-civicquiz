@@ -1,0 +1,38 @@
+<!-- AI生成 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CivicQuiz · 学习闭环 MVP 原型</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<p data-aigc-mark="1" style="margin:0 0 8px;font-size:10px;line-height:1.3;color:#6b6560;font-weight:400;">AI生成</p>
+
+  <div class="stage">
+    <aside class="stage-notes">
+      <h1>学习闭环 MVP</h1>
+      <p class="muted">可交互原型 · 首页 / 刷题 / 考试 / 我的</p>
+      <ul>
+        <li>首页成为学习驾驶舱</li>
+        <li>练习即时反馈 · 考试统一判分</li>
+        <li>错题可行动 · 历史考试可复盘</li>
+        <li>外观设置收敛到「设置」</li>
+      </ul>
+      <p class="hint">在右侧手机画框内操作；点击底部 Tab 切换主页面。</p>
+    </aside>
+
+    <div class="phone" id="phone">
+      <div class="phone-notch"></div>
+      <div class="app theme-a" id="app">
+        <header class="nav-bar" id="nav-bar"></header>
+        <main class="screen" id="screen"></main>
+        <nav class="tab-bar" id="tab-bar"></nav>
+      </div>
+    </div>
+  </div>
+  <div class="modal-root" id="modal-root"></div>
+  <script src="app.js"></script>
+</body>
+</html>
