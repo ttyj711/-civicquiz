@@ -201,16 +201,16 @@ export default function PracticeQuiz() {
       </View>
 
       {answered && (
-        <View className='card'>
-          {/* 正确答案 / 你的答案 对比 */}
+        <View className={`card feedback ${res.correct ? 'ok' : 'bad'}`}>
+          <Text className='feedback-title'>{res.correct ? '✓ 回答正确' : '✕ 回答错误'}</Text>
           <View className='answer-compare'>
             <View className='compare-item'>
               <Text>正确答案</Text>
-              <Text className={'compare-value ' + (res.correct ? 'ok' : 'no')}>{(res.answerKeys ?? []).join(',')}</Text>
+              <Text className='compare-value ok'>{(res.answerKeys ?? []).join('')}</Text>
             </View>
             <View className='compare-item'>
               <Text>你的答案</Text>
-              <Text className={'compare-value ' + (res.correct ? 'ok' : 'no')}>{pickedArr.join(',') || '未作答'}</Text>
+              <Text className={'compare-value ' + (res.correct ? 'ok' : 'no')}>{pickedArr.join('') || '未作答'}</Text>
             </View>
           </View>
 
@@ -261,17 +261,17 @@ export default function PracticeQuiz() {
 
       <View className='row between bottom-bar'>
         {idx > 0 && <Button className='nav-btn' hoverClass='button-hover' onClick={() => goNav(idx - 1)}>上一题</Button>}
-        <Button className='fav-btn' hoverClass='button-hover' onClick={() => void favToggle()}>{isFav ? '★ 已收藏' : '☆ 收藏'}</Button>
+        <Button className='fav-btn' hoverClass='button-hover' onClick={() => void favToggle()}>{isFav ? '☆ 已收藏' : '☆ 收藏'}</Button>
         {idx < questions.length - 1
           ? <Button className={`nav-btn primary ${!answered ? 'disabled' : ''}`} hoverClass='button-hover'
               disabled={!answered || judging}
               onClick={() => { if (answered) goNav(idx + 1) }}>
-              {answered ? '下一题' : isMulti && curPending.length > 0 ? '请先提交本题' : '请选择答案'}
+              {answered ? '下一题 →' : isMulti && curPending.length > 0 ? '请先提交本题' : '请选择答案'}
             </Button>
           : <Button className={`nav-btn primary ${!answered ? 'disabled' : ''}`} hoverClass='button-hover'
               disabled={!answered || judging}
               onClick={() => { if (answered) void doFinish() }}>
-              {answered ? '完成' : '请选择答案'}
+              {answered ? '完成练习' : '请选择答案'}
             </Button>}
       </View>
     </View>

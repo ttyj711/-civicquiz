@@ -1,114 +1,110 @@
-// 全局样式与设计 token（页面通用）
-// 双主题：A 舒缓绿（默认）/ B 暖棕，通过页面根节点追加 .theme-b 切换
+// CivicQuiz · 轻量专业备考视觉体系
+// 层级：L1 页面 bg → L2 主卡 panel → L3 数据网格（非卡片）
+// 双主题：A 舒缓绿（默认）/ B 暖棕，页面根节点 .theme-b 切换
+
 page {
-  background: #F7F8F6;
+  background: #F6F8F6;
   font-size: 28px;
-  color: #2C3E35;
+  color: #1F2933;
 }
 
-// ---- 主题 token：方案 A 苔绿 ----
 .page,
 .exam-page {
-  // 主色 / 强调色
-  --primary: #4A7C59;
-  --primary-deep: #3E6A4C;
-  --primary-soft: #EAF2EC;
-  --accent: #E8A87C;
-  --accent-soft: #FBF1E8;
+  // 主色 / 强调
+  --primary: #3F7D5A;
+  --primary-deep: #286044;
+  --primary-soft: #EEF6F0;
+  --accent: #D99A45;
+  --accent-soft: #FBF3E7;
   // 底色 / 面板
-  --bg: #F7F8F6;
+  --bg: #F6F8F6;
   --panel: #FFFFFF;
-  --panel-soft: #F2F5F1;
-  --border: #EAEFEA;
+  --panel-soft: #F0F3F1;
+  --border: #E5EAE6;
   // 文字
-  --text: #2C3E35;
-  --text-sub: #7C8B82;
+  --text: #1F2933;
+  --text-sub: #718096;
   --text-faint: #A0AAA4;
-  // 状态
-  --danger: #C4766F;
-  --danger-soft: #F8EEED;
-  --success: #4A7C59;
-  --success-soft: #EAF2EC;
-  --warn: #C9995B;
-  --warn-soft: #FAF3E7;
+  // 状态（语义色：绿=对/主操作，红=错，橙=收藏/提醒）
+  --success: #3F7D5A;
+  --success-soft: #EEF6F0;
+  --danger: #D96C5F;
+  --danger-soft: #FAEFED;
+  --warn: #D99A45;
+  --warn-soft: #FBF3E7;
   --info: #6B8E9E;
   --info-soft: #ECF3F5;
 
   min-height: 100vh;
-  padding: 24px 20px;
-  padding-bottom: calc(40px + env(safe-area-inset-bottom));
+  padding: 32px;
+  padding-bottom: calc(48px + env(safe-area-inset-bottom));
   box-sizing: border-box;
   background: var(--bg);
   color: var(--text);
 }
 
-// ---- 主题 token：方案 B 暖棕 ----
+// 主题 B · 暖棕（保持品牌识别，色值对齐新体系）
 .page.theme-b,
 .exam-page.theme-b {
   --primary: #8C6D53;
-  --primary-deep: #745842;
+  --primary-deep: #6B5340;
   --primary-soft: #F3EDE4;
   --accent: #D98863;
   --accent-soft: #FAEEE6;
   --bg: #FAF6F0;
   --panel-soft: #F4EEE5;
   --border: #EFE8DD;
-  --text: #3E342B;
-  --text-sub: #94897C;
-  --text-faint: #B0A697;
-  --danger: #BC7268;
-  --danger-soft: #F7EDEA;
+  --text: #1F2933;
+  --text-sub: #6B6258;
+  --text-faint: #A0988C;
+  --danger: #D96C5F;
+  --danger-soft: #FAEFED;
   --success: #6E8F5E;
   --success-soft: #EFF3E9;
-  --warn: #C08F52;
-  --warn-soft: #F8F0E2;
+  --warn: #D99A45;
+  --warn-soft: #FBF3E7;
   --info: #8A7B9E;
   --info-soft: #F1EDF6;
 }
 
+// L2 主内容卡：轻边框、极浅阴影（Border > Heavy Shadow）
 .card {
   background: var(--panel);
-  border-radius: 24px;
-  padding: 28px 24px;
-  margin-bottom: 20px;
+  border-radius: 32px;
+  padding: 32px;
+  margin-bottom: 24px;
   border: 1px solid var(--border);
-  box-shadow: 0 4px 14px rgba(74, 124, 89, 0.05);
+  box-shadow: 0 4px 16px rgba(31, 41, 51, 0.04);
 }
 
 .row {
   display: flex;
   align-items: center;
 }
+.between { justify-content: space-between; }
 
-.between {
-  justify-content: space-between;
-}
-
+// 字阶：模块标题 16pt / 辅助 12pt
 .title {
   font-size: 32px;
   font-weight: 600;
   color: var(--text);
+  letter-spacing: 0.2px;
 }
-
 .sub {
   color: var(--text-sub);
   font-size: 24px;
   line-height: 1.5;
 }
-
-.primary {
-  color: var(--primary);
-}
+.primary { color: var(--primary); }
 
 .page-title {
   display: block;
-  font-size: 36px;
-  font-weight: 700;
-  margin: 8px 4px 24px;
+  font-size: 40px;
+  font-weight: 600;
+  margin: 8px 0 24px;
   color: var(--text);
 }
 
-// 通用空状态（温情文案）
 .empty {
   padding: 80px 0;
   text-align: center;
@@ -124,35 +120,35 @@ page {
   margin-bottom: 20px;
 }
 .edot {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   opacity: 0.55;
 }
 .edot.d1 { background: var(--primary); }
-.edot.d2 { background: var(--accent); }
+.edot.d2 { background: var(--warn); }
 .edot.d3 { background: var(--info); }
 
-// 主按钮统一按压反馈
 .button-hover {
-  opacity: 0.85;
+  opacity: 0.88;
   transform: scale(0.98);
 }
 
 .mt8 { margin-top: 8px; }
 .mt16 { margin-top: 16px; }
 .mt24 { margin-top: 24px; }
+.mb8 { margin-bottom: 8px; }
+.mb12 { margin-bottom: 12px; }
 .mb16 { margin-bottom: 16px; }
 .flex1 { flex: 1; min-width: 0; }
 .center { text-align: center; }
+.block { display: block; }
 
-// 卡片行内按钮：Taro Button 默认块级全宽，在 flex 行里会把文本列挤成竖排
 .go-btn {
   width: fit-content;
   flex-shrink: 0;
 }
 
-// 浅底主色按钮（列表卡片操作，fit-content）
 .soft-btn {
   width: fit-content;
   flex-shrink: 0;
@@ -161,12 +157,12 @@ page {
   border: none;
   font-size: 26px;
   font-weight: 600;
-  border-radius: 28px;
+  border-radius: 24px;
   padding: 0 32px;
   line-height: 2.4;
 }
 
-// 全宽按钮基类：统一边框宽度与行高，保证不同变体等高
+// 全宽按钮：圆角 12pt=24，等高 88
 .btn-primary,
 .btn-ghost,
 .btn-danger {
@@ -174,62 +170,47 @@ page {
   box-sizing: border-box;
   border-width: 2px;
   border-style: solid;
-  border-radius: 44px;
+  border-radius: 24px;
   font-size: 30px;
   font-weight: 600;
-  line-height: 1;
-  padding: 25px 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-// 全宽主行动按钮（柔和主题：浅底 + 主色字 + 主色描边）
-.btn-primary {
-  background: var(--primary-soft);
-  color: var(--primary);
-  border-color: var(--primary);
-}
-.btn-primary[disabled],
-.btn-primary:disabled { opacity: 0.5; }
-
-// 全宽次级按钮（白底主色字 + 极浅描边）
-.btn-ghost {
-  background: #fff;
-  color: var(--primary);
-  border-color: var(--primary-soft);
-}
-
-// 全宽按钮统一高度：border 差异会让 btn-ghost 比 btn-primary 高 4px，
-// 并排时会出现「一高一低」。此处强制等高 + border 计入盒模型 + flex 垂直居中。
-.btn-primary,
-.btn-ghost,
-.btn-danger {
-  box-sizing: border-box;
+  line-height: 1.2;
   height: 88px;
   padding: 0;
   margin: 0;
-  line-height: 1.2;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-// 全宽警示按钮（柔红：交卷等终结性操作）
+// 主按钮：实心主色（主要操作）
+.btn-primary {
+  background: var(--primary);
+  color: #FFFFFF;
+  border-color: var(--primary);
+}
+.btn-primary[disabled],
+.btn-primary:disabled { opacity: 0.45; }
+
+// 次按钮：Ghost
+.btn-ghost {
+  background: transparent;
+  color: var(--primary);
+  border-color: var(--border);
+}
+
 .btn-danger {
   background: var(--danger-soft);
   color: var(--danger);
   border-color: var(--danger-soft);
 }
 
-// [标签] 前缀徽章（浅绿底深绿字）
 .tag-badge {
   display: inline-block;
   font-size: 20px;
   font-weight: 600;
   color: var(--primary);
   background: var(--primary-soft);
-  border-radius: 8px;
+  border-radius: 16px;
   padding: 2px 12px;
   margin-right: 12px;
   vertical-align: middle;

@@ -12,6 +12,11 @@ import { useThemeClass } from '../../services/theme'
 const fmtTime = (s: string) => (s ? s.replace('T', ' ').slice(5, 16) : '')
 const TODAY_TARGET = 20
 
+function accOf(r: UserExamItem) {
+  const n = r.correctCount + r.wrongCount + r.unansweredCount
+  return n ? Math.round((r.correctCount / n) * 100) : 0
+}
+
 export default function MinePage() {
   const themeCls = useThemeClass()
   const [nick, setNick] = useState('')
@@ -58,95 +63,82 @@ export default function MinePage() {
 
   return (
     <View className={'page ' + themeCls}>
-      <View className='card head'>
-        <View className='avatar'>{nick?.[0] || '考'}</View>
+      {/* L2 主卡：身份 + 今日进度（头像弱化） */}
+      <View className='card profile-card'>
+        <View className='row between'>
+          <View className='row profile-id'>
+            <View className='avatar-sm'>{nick?.[0] || '考'}</View>
+            <View>
+              <Text className='profile-name'>{nick || '备考用户'}</Text>
+              <Text className='profile-tag'>准备好继续学习了吗？</Text>
+            </View>
+          </View>
+          <Text className='settings-link' onClick={() => Taro.navigateTo({ url: '/pages/mine/settings' })}>设置</Text>
+        </View>
+
+        <Text className='block-label'>今日进度</Text>
+        <View className='progress'>
+          <View className='progress-fill' style={{ width: `${pct}%` }} />
+        </View>
+        <Text className='sub'>已完成 {todayDone} / {TODAY_TARGET} 题 · {pct}%</Text>
+
+        <Button className='btn-primary mt24' hoverClass='button-hover'
+          loading={starting}
+          onClick={() => {
+            if (ongoing) Taro.navigateTo({ url: `/pages/exams/quiz?id=${ongoing.examId}` })
+            else void startRandom()
+          }}>
+          {ongoing ? '继续答题 →' : '继续学习 →'}
+        </Button>
+      </View>
+
+      {/* L3 学习数据：网格，非嵌套卡片 */}
+      <Text className='section-title'>学习数据</Text>
+      <View className='stat-board'>
+        <View className='stat-cell'>
+          <Text className='stat-num'>{stats?.totalAnswered ?? 0}</Text>
+          <Text className='stat-lab'>答题数</Text>
+        </View>
+        <View className='stat-cell'>
+          <Text className='stat-num'>{stats?.totalAccuracy ?? 0}%</Text>
+          <Text className='stat-lab'>正确率</Text>
+        </View>
+        <View className='stat-cell'>
+          <Text className='stat-num'>{wrongN}</Text>
+          <Text className='stat-lab'>错题</Text>
+        </View>
+        <View className='stat-cell'>
+          <Text className='stat-num'>{stats?.favoriteCount ?? 0}</Text>
+          <Text className='stat-lab'>收藏</Text>
+        </View>
+      </View>
+
+      {/* 错题行动行 */}
+      <View className='card action-row' onClick={() => Taro.navigateTo({ url: '/pages/wrong/wrong' })}>
         <View className='flex1'>
-          <Text className='head-title'>{nick || '备考用户'}</Text>
-          <Text className='head-sub'>今日已完成 {todayDone} / {TODAY_TARGET} 题</Text>
-          <View className='progress'>
-            <View className='progress-fill' style={{ width: `${pct}%` }} />
-          </View>
-        </View>
-        <View className='gear' onClick={() => Taro.navigateTo({ url: '/pages/mine/settings' })}>⚙</View>
-      </View>
-
-      <View className='card'>
-        <Text className='title mb12'>核心指标</Text>
-        <View className='metric-grid'>
-          <View className='metric core'>
-            <Text className='metric-num'>{stats?.totalAnswered ?? 0}</Text>
-            <Text className='metric-lab'>累计答题</Text>
-          </View>
-          <View className='metric core'>
-            <Text className='metric-num'>{stats?.totalAccuracy ?? 0}%</Text>
-            <Text className='metric-lab'>正确率</Text>
-          </View>
-          <View className='metric core'>
-            <Text className='metric-num'>{wrongN}</Text>
-            <Text className='metric-lab'>错题</Text>
-          </View>
-        </View>
-        <View className='metric-grid secondary'>
-          <View className='metric'>
-            <Text className='metric-num soft'>{stats?.favoriteCount ?? 0}</Text>
-            <Text className='metric-lab'>收藏</Text>
-          </View>
-          <View className='metric'>
-            <Text className='metric-num soft'>{stats?.examCount ?? 0}</Text>
-            <Text className='metric-lab'>模拟考试</Text>
-          </View>
-        </View>
-      </View>
-
-      <View className='card'>
-        <View className='row between mb12'>
           <Text className='title'>错题复习</Text>
-          <Button className='mini-danger' hoverClass='button-hover'
-            onClick={() => Taro.navigateTo({ url: '/pages/wrong/wrong' })}>去复习</Button>
+          <Text className='sub block mt8'>还有 {wrongN} 道题需要巩固</Text>
         </View>
-        <Text className='sub'>还有 {wrongN} 道题待巩固</Text>
+        <Text className='arrow'>→</Text>
       </View>
 
+      {/* 最近考试 */}
+      <Text className='section-title'>最近考试</Text>
       <View className='card'>
-        <Text className='title mb12'>继续学习</Text>
-        {ongoing ? (
-          <>
-            <Text className='sub block mb12'>上次做到：{ongoing.examName}</Text>
-            <Button className='btn-primary' hoverClass='button-hover'
-              onClick={() => Taro.navigateTo({ url: `/pages/exams/quiz?id=${ongoing.examId}` })}>
-              继续答题 →
-            </Button>
-          </>
-        ) : (
-          <>
-            <Text className='sub block mb12'>开始今天的练习 · 随机 20 题</Text>
-            <Button className='btn-primary' hoverClass='button-hover' loading={starting} onClick={() => void startRandom()}>
-              开始刷题
-            </Button>
-          </>
-        )}
-      </View>
-
-      <View className='card'>
-        <Text className='title mb16'>历史考试</Text>
         {records.slice(0, 5).map((r) => {
           const total = Number(r.totalScore) || 0
           const score = Number(r.score) || 0
-          const acc = accOf(r)
           return (
-            <View key={r.id} className='rec-item'
+            <View key={r.id} className='exam-row'
               onClick={() => Taro.navigateTo({ url: `/pages/exams/review?id=${r.id}` })}>
-              <View className='row between mb8'>
-                <Text className='rec-name'>{r.examName}</Text>
-                <Text className={`rec-score ${total && score >= total * 0.6 ? 'ok' : 'no'}`}>{r.score ?? '-'}</Text>
+              <View className='flex1'>
+                <Text className='exam-name'>{r.examName}</Text>
+                <Text className='sub block mt8'>
+                  {fmtTime(r.startTime)} · 正确率 {accOf(r)}% · {r.correctCount + r.wrongCount + r.unansweredCount} 题
+                </Text>
               </View>
-              <Text className='sub block mb8'>{fmtTime(r.startTime)}</Text>
-              <View className='rec-kv'>
-                <Text className='sub'>正确率 {acc}%</Text>
-                <Text className='sub'>{r.correctCount + r.wrongCount + r.unansweredCount} 题</Text>
-                <Text className='sub'>{r.duration != null ? `${Math.max(1, Math.round(Number(r.duration) / 60))}′` : '-'}</Text>
-                <Text className='go'>查看详情 →</Text>
-              </View>
+              <Text className={`exam-score ${total && score >= total * 0.6 ? 'ok' : 'no'}`}>{r.score ?? '-'}</Text>
+              <Text className='arrow'>→</Text>
             </View>
           )
         })}
@@ -156,10 +148,4 @@ export default function MinePage() {
       </View>
     </View>
   )
-}
-
-// 局部辅助：用对/错/未答推正确率（列表接口未带 accuracy 字段）
-function accOf(r: UserExamItem) {
-  const n = r.correctCount + r.wrongCount + r.unansweredCount
-  return n ? Math.round((r.correctCount / n) * 100) : 0
 }

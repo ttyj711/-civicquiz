@@ -1,235 +1,185 @@
-// === 顶部进度条：细线式（图2顶部） ===
+// 练习答题 · 轻量专业
 .progress {
-  height: 6px;
-  background: var(--border);
-  border-radius: 3px;
+  height: 12px;
+  background: var(--panel-soft);
+  border-radius: 6px;
   overflow: hidden;
-  margin-bottom: 20px;
+  margin-bottom: 28px;
 }
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--primary), var(--primary));
-  border-radius: 3px;
+  background: var(--primary);
+  border-radius: 6px;
   transition: width 0.3s ease;
 }
 
-// === 顶部栏：左「第 N / M 题」，右浅蓝「单选题」徽章（图2） ===
-.topbar { margin-bottom: 12px; }
-.topbar .idx { color: var(--text-sub); font-size: 26px; }
+.topbar { margin-bottom: 16px; }
+.topbar .idx {
+  color: var(--text);
+  font-size: 28px;
+  font-weight: 600;
+}
 .type-tag {
-  background: #E8F1FB;
-  color: var(--primary);
+  background: var(--primary-soft);
+  color: var(--primary-deep);
   font-size: 22px;
   font-weight: 600;
-  padding: 4px 16px;
-  border-radius: 8px;
+  padding: 6px 16px;
+  border-radius: 16px;
 }
 
-// === 题目内容：大字粗体、宽松行高（图1/2） ===
+// 题干：轻白卡，无重阴影
 .q-content {
-  font-size: 32px;
+  font-size: 34px;
   font-weight: 600;
-  line-height: 1.75;
+  line-height: 1.7;
   color: var(--text);
   display: block;
-  letter-spacing: 0.5px;
 }
 
-// === 选项样式：选项卡自带，基础样式见 components/QuestionOptions.scss ===
-// 这里只覆盖「答题页 chip 变体」：圆环字母稍大
-.card-options { padding-top: 4px; }
+.card-options { padding-top: 8px; }
 
-// === 答题后：正确答案 / 你的答案 并排对比（图1中部） ===
 .answer-compare {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  margin-top: 28px;
+  margin-top: 24px;
   padding: 16px 0 4px;
-  border-top: 1px dashed var(--border);
+  border-top: 1px solid var(--border);
 }
 .compare-item { display: flex; align-items: center; font-size: 26px; color: var(--text-sub); }
 .compare-value { font-weight: 700; margin-left: 10px; letter-spacing: 2px; }
 .compare-value.ok { color: var(--success); }
 .compare-value.no { color: var(--danger); }
 
-// === 时间统计三列：答题时间 / 全站正确率 / 易错项（图1） ===
 .stats-row {
   display: flex;
-  margin-top: 28px;
+  margin-top: 24px;
   padding-top: 24px;
-  border-top: 1px solid var(--border);
 }
-.stat-item {
-  flex: 1;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.stat-num {
-  font-size: 36px;
-  font-weight: 700;
-  line-height: 1.2;
-  font-variant-numeric: tabular-nums;
-}
-.stat-unit { font-size: 22px; font-weight: 500; margin-left: 2px; color: var(--text-sub); }
+.stats-row .stat-item { flex: 1; text-align: center; }
+.stat-num { font-size: 32px; font-weight: 700; color: var(--text); display: block; }
 .stat-num.green { color: var(--success); }
 .stat-num.red { color: var(--danger); }
-.stat-label { font-size: 22px; color: var(--text-sub); margin-top: 6px; }
+.stat-unit { font-size: 22px; font-weight: 400; }
+.stat-label { display: block; margin-top: 4px; font-size: 22px; color: var(--text-sub); }
 
-// === 解析区：绿点 + 标题 + 深色正文（图1） ===
-.analysis {
-  padding: 0;
-  border-left: none;
-}
 .analysis-head {
-  display: flex;
-  align-items: center;
-  font-size: 30px;
-  font-weight: 700;
-  color: var(--primary);
-  margin-bottom: 16px;
-  letter-spacing: 2px;
-}
-.analysis-head::before {
-  content: '';
-  width: 14px;
-  height: 14px;
-  background: var(--primary);
-  border-radius: 50%;
-  margin-right: 12px;
-  flex-shrink: 0;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 12px;
 }
 .analysis-text {
-  display: block;
-  font-size: 29px;
-  line-height: 1.9;
-  letter-spacing: 1px;
-  color: var(--text);
+  font-size: 26px;
+  line-height: 1.7;
+  color: var(--text-sub);
 }
-
-// === 考点：橙色小标签（图1） ===
 .kaodian {
   display: flex;
   align-items: center;
-  gap: 12px;
   margin-top: 20px;
-  flex-wrap: wrap;
 }
 .kaodian .label {
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--text);
+  font-size: 24px;
+  color: var(--text-sub);
+  margin-right: 12px;
 }
 .kaodian-tag {
-  font-size: 22px;
-  color: var(--primary);
-  background: var(--primary-soft);
-  border-radius: 6px;
-  padding: 4px 14px;
-  font-weight: 600;
-}
-.kaodian-source { font-size: 22px; color: var(--text-sub); }
-
-// === 题目整理 + 笔记（图1底部） ===
-.note-section {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border);
-}
-.note-title {
-  font-size: 26px;
-  font-weight: 700;
+  background: var(--panel-soft);
   color: var(--text);
-  margin-bottom: 12px;
+  font-size: 22px;
+  padding: 4px 14px;
+  border-radius: 16px;
 }
-.note-row {
-  display: flex;
-  gap: 12px;
-  align-items: stretch;
-}
+.note-section { margin-top: 24px; }
+.note-title { display: block; font-size: 26px; font-weight: 600; margin-bottom: 12px; }
+.note-row { display: flex; gap: 12px; align-items: center; }
 .note-input {
   flex: 1;
-  min-width: 0;      // 允许收缩，防止被按钮挤压
-  width: auto;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 14px 18px;
-  font-size: 26px;
-  background: #fff;
+  background: var(--panel-soft);
+  border-radius: 16px;
+  padding: 12px 16px;
+  font-size: 24px;
 }
 .note-btn {
-  width: auto;        // Taro Button 默认块级全宽，必须锁死
-  flex-shrink: 0;
-  background: var(--primary);
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  padding: 0 28px;
-  font-size: 26px;
-  line-height: 1.2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: fit-content !important;
+  margin: 0 !important;
+  height: 64px !important;
+  line-height: 64px !important;
+  padding: 0 20px !important;
+  border-radius: 24px !important;
+  background: var(--panel-soft) !important;
+  color: var(--text) !important;
+  font-size: 24px !important;
+  border: none !important;
 }
 
-// === 多选题提交按钮 ===
-.confirm-btn {
-  margin-top: 8px;
-  background: var(--primary-soft);
-  color: var(--primary);
-  font-size: 28px;
-  font-weight: 600;
-  border-radius: 40px;
-  border: none;
-  line-height: 2.4;
-}
-
-// === 底部导航条：上一题 / 收藏 / 下一题（三等宽、等高） ===
+// 底栏：Ghost 收藏 + Primary 下一题
 .bottom-bar {
-  margin-top: 24px;
-  align-items: stretch;
-  gap: 16px;
-}
-.nav-btn {
-  flex: 1;
-  width: auto;
-  height: 88px;
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-  background: #fff;
-  color: var(--text);
-  border: 2px solid var(--border);
-  font-size: 26px;
-  border-radius: 44px;
   display: flex;
   align-items: center;
-  justify-content: center;
-}
-.nav-btn.primary {
-  background: var(--primary-soft);
-  color: var(--primary);
-  border-color: var(--primary-soft);
+  gap: 16px;
+  margin-top: 32px;
+  padding-bottom: 8px;
 }
 .fav-btn {
-  flex: 1;
-  width: auto;
-  height: 88px;
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-  background: var(--warn-soft);
-  color: var(--text);
-  border: 2px solid var(--warn-soft);
-  font-size: 24px;
-  font-weight: 600;
-  border-radius: 44px;
-  display: flex;
+  width: fit-content !important;
+  margin: 0 !important;
+  height: 88px !important;
+  padding: 0 28px !important;
+  border-radius: 24px !important;
+  background: transparent !important;
+  color: var(--primary) !important;
+  border: 2px solid var(--border) !important;
+  font-size: 26px !important;
+  font-weight: 600 !important;
+  display: flex !important;
   align-items: center;
   justify-content: center;
 }
-.nav-btn.disabled {
+.nav-btn {
+  width: fit-content !important;
+  margin: 0 !important;
+  height: 88px !important;
+  padding: 0 32px !important;
+  border-radius: 24px !important;
+  background: transparent !important;
+  color: var(--text-sub) !important;
+  border: 2px solid var(--border) !important;
+  font-size: 26px !important;
+  font-weight: 600 !important;
+}
+.nav-btn.primary {
+  flex: 1;
+  width: auto !important;
+  background: var(--primary) !important;
+  color: #fff !important;
+  border-color: var(--primary) !important;
+}
+.nav-btn.disabled,
+.nav-btn.primary.disabled {
   opacity: 0.45;
+}
+
+.feedback-title {
+  display: block;
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.feedback.ok .feedback-title { color: var(--success); }
+.feedback.bad .feedback-title { color: var(--danger); }
+.feedback.ok { border-color: var(--success-soft); }
+.feedback.bad { border-color: var(--danger-soft); }
+
+.confirm-btn {
+  width: 100% !important;
+  margin-top: 8px;
+  height: 80px !important;
+  border-radius: 24px !important;
+  background: var(--primary) !important;
+  color: #fff !important;
+  border: none !important;
+  font-size: 28px !important;
+  font-weight: 600 !important;
 }

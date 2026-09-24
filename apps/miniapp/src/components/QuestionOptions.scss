@@ -1,58 +1,85 @@
-// 选项卡统一样式：随 picked / correct / wrong / dim 状态变色
+// 选项 · 考试答题卡视觉：圆形字母键 + 语义四态
 .qopt {
   display: flex;
   align-items: center;
   border: 2px solid var(--border);
-  border-radius: 16px;
-  padding: 20px 18px;
-  margin-bottom: 16px;
-  transition: all 0.2s;
+  border-radius: 24px;
+  padding: 28px 24px;
+  margin-bottom: 20px;
+  background: var(--panel);
+  transition: border-color 0.15s, background 0.15s;
 }
 
-// 可点击时才有按压反馈
-.qopt.chip:active { background: var(--bg); }
+.qopt.chip:active { background: var(--panel-soft); }
 
-.qopt.picked { border-color: var(--primary); background: var(--primary-soft); }
-.qopt.correct { border-color: var(--success); background: var(--success-soft); }
-.qopt.wrong { border-color: var(--danger); background: var(--danger-soft); }
+.qopt.picked {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+}
+.qopt.correct {
+  border-color: var(--success);
+  background: var(--success-soft);
+}
+.qopt.wrong {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+}
 .qopt.dim { opacity: 0.5; }
 
-// 字母芯片（chip 变体）：未选 = 浅底品牌色字母（对齐参考图2）
+// 圆形字母键（练习/复盘）
 .qopt-key {
-  width: 52px;
-  height: 52px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   background: var(--panel-soft);
-  color: var(--primary);
+  color: var(--primary-deep);
   font-size: 26px;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 18px;
+  margin-right: 20px;
   flex-shrink: 0;
-  transition: all 0.2s;
+  transition: all 0.15s;
 }
-.qopt.picked .qopt-key { background: var(--primary); color: #fff; }
-.qopt.correct .qopt-key { background: var(--success); color: #fff; }
-.qopt.wrong .qopt-key { background: var(--danger); color: #fff; }
+.qopt.picked .qopt-key {
+  background: var(--primary);
+  color: #fff;
+}
+.qopt.correct .qopt-key {
+  background: var(--success);
+  color: #fff;
+}
+.qopt.wrong .qopt-key {
+  background: var(--danger);
+  color: #fff;
+}
 
-// 字母前缀（plain 变体，考试作答场景）
+// plain：考试作答也使用圆形键（与练习一致）
 .qopt.plain .qopt-key {
-  width: auto;
-  height: auto;
-  border-radius: 0;
-  background: transparent;
-  color: var(--text);
-  font-size: 28px;
-  margin-right: 12px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--panel-soft);
+  color: var(--primary-deep);
+  font-size: 26px;
+  margin-right: 20px;
 }
-.qopt.plain.picked .qopt-key { background: transparent; color: var(--primary); }
-.qopt.plain.correct .qopt-key { background: transparent; color: var(--success); }
-.qopt.plain.wrong .qopt-key { background: transparent; color: var(--danger); }
+.qopt.plain.picked .qopt-key { background: var(--primary); color: #fff; }
+.qopt.plain.correct .qopt-key { background: var(--success); color: #fff; }
+.qopt.plain.wrong .qopt-key { background: var(--danger); color: #fff; }
 
-.qopt-content { flex: 1; line-height: 1.5; font-size: 28px; }
+.qopt-content {
+  flex: 1;
+  line-height: 1.5;
+  font-size: 28px;
+  color: var(--text);
+}
 
-.qopt-mark { margin-left: 8px; font-weight: 700; font-size: 30px; }
+.qopt-mark {
+  margin-left: 12px;
+  font-weight: 700;
+  font-size: 32px;
+}
 .qopt-mark.ok { color: var(--success); }
 .qopt-mark.no { color: var(--danger); }

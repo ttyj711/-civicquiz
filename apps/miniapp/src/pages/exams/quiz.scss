@@ -1,50 +1,140 @@
-.exam-page { height: 100vh; display: flex; flex-direction: column; background: var(--bg); }
-.top { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid var(--border); background: #fff; }
-.timer { font-size: 36px; font-weight: 700; color: var(--text); }
+.exam-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 24px 32px;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel);
+}
+.timer {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
 .timer.danger { color: var(--danger); }
-.sheet-btn { background: var(--primary-soft); color: var(--primary); font-size: 26px; border-radius: 30px; width: fit-content; }
+.sheet-btn {
+  background: var(--primary-soft);
+  color: var(--primary-deep);
+  font-size: 24px;
+  border-radius: 16px;
+  width: fit-content;
+  margin: 0;
+  padding: 0 16px;
+  line-height: 2.2;
+  border: none;
+}
+.head-idx {
+  font-size: 24px;
+  color: var(--text-sub);
+  flex: 1;
+  text-align: center;
+  font-weight: 500;
+}
+.exam-progress {
+  height: 12px;
+  background: var(--panel-soft);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.exam-progress-fill {
+  height: 100%;
+  background: var(--primary);
+  transition: width 0.3s ease;
+}
 
-.body { flex: 1; padding: 24px; box-sizing: border-box; }
-.q-head { color: var(--text-sub); font-size: 24px; margin-bottom: 16px; }
-.q-content { font-size: 32px; line-height: 1.6; margin-bottom: 24px; }
-
-// 选项样式已抽至 components/QuestionOptions.scss（.qopt）
+.body {
+  flex: 1;
+  padding: 32px;
+  box-sizing: border-box;
+}
+.q-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  color: var(--text-sub);
+  font-size: 24px;
+}
+.fav-on-stem {
+  color: var(--warn);
+  font-size: 24px;
+}
+.q-content {
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1.7;
+  color: var(--text);
+  margin-bottom: 28px;
+}
 
 .foot {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 16px 24px;
-  padding-bottom: calc(16px + env(safe-area-inset-bottom));
+  padding: 20px 32px;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom));
   border-top: 1px solid var(--border);
-  background: #fff;
+  background: var(--panel);
 }
-// 底部按钮统一 88px 等高（与练习页一致），消除 Taro Button 默认样式造成的错位
 .f-btn {
   flex: 1;
   height: 88px;
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  background: #fff;
-  color: var(--text);
+  background: transparent;
+  color: var(--text-sub);
   border: 2px solid var(--border);
   font-size: 28px;
-  border-radius: 44px;
+  font-weight: 600;
+  border-radius: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.f-btn.primary { background: var(--primary-soft); color: var(--primary); border-color: var(--primary-soft); }
-.f-btn.danger { background: var(--danger-soft); color: var(--danger); border-color: var(--danger-soft); }
+.f-btn.primary {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+.f-btn.danger {
+  background: var(--danger-soft);
+  color: var(--danger);
+  border-color: var(--danger-soft);
+}
 
-.sheet-mask { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); z-index: 100; display: flex; align-items: flex-end; }
-.sheet { width: 100%; background: #fff; border-radius: 24px 24px 0 0; padding: 32px 24px; }
-.sheet-grid { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 24px; }
+.sheet-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(31, 41, 51, 0.45);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+}
+.sheet {
+  width: 100%;
+  background: var(--panel);
+  border-radius: 32px 32px 0 0;
+  padding: 32px;
+}
+.sheet-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
 .sheet-cell {
-  width: 68px;
-  height: 68px;
-  border-radius: 12px;
+  width: 72px;
+  height: 72px;
+  border-radius: 16px;
   background: var(--panel-soft);
   display: flex;
   align-items: center;
@@ -52,13 +142,21 @@
   font-size: 24px;
   color: var(--text-sub);
 }
-.sheet-cell.done { background: var(--primary); color: #fff; }
-.sheet-cell.cur { border: 3px solid var(--warn-soft); }
+.sheet-cell.done {
+  background: var(--primary);
+  color: #fff;
+}
+.sheet-cell.cur {
+  box-shadow: inset 0 0 0 3px var(--warn);
+}
+.sheet-cell.fav {
+  box-shadow: inset 0 0 0 2px var(--warn);
+}
 .submit-btn {
   background: var(--danger-soft);
   color: var(--danger);
-  border-radius: 44px;
-  font-size: 30px;
+  border-radius: 24px;
+  font-size: 28px;
   border: none;
   font-weight: 600;
   height: 88px;
@@ -68,32 +166,4 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.head-idx {
-  font-size: 24px;
-  color: var(--text-sub);
-  flex: 1;
-  text-align: center;
-}
-.exam-progress {
-  height: 6px;
-  background: var(--border);
-}
-.exam-progress-fill {
-  height: 100%;
-  background: var(--primary);
-  transition: width 0.3s ease;
-}
-.q-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.fav-on-stem {
-  color: var(--accent);
-  font-size: 24px;
-}
-.sheet-cell.fav {
-  border: 1px solid var(--accent);
 }
