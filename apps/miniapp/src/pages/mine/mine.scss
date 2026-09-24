@@ -7,6 +7,93 @@
   position: relative;
   overflow: hidden;
 }
+.gear {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--panel-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  color: var(--text-sub);
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+.metric-grid {
+  display: flex;
+  gap: 12px;
+}
+.metric-grid.secondary { margin-top: 12px; }
+.metric {
+  flex: 1;
+  background: var(--panel-soft);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px 8px;
+  text-align: center;
+}
+.metric.core { padding: 24px 8px; }
+.metric-num {
+  display: block;
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+}
+.metric-num.soft { font-size: 34px; color: var(--text); }
+.metric-lab { display: block; font-size: 22px; color: var(--text-sub); margin-top: 4px; }
+.mini-danger {
+  width: fit-content !important;
+  margin: 0 !important;
+  padding: 0 20px !important;
+  height: 56px !important;
+  line-height: 56px !important;
+  font-size: 24px !important;
+  border-radius: 28px !important;
+  background: var(--danger-soft) !important;
+  color: var(--danger) !important;
+  border: none !important;
+}
+.btn-primary {
+  width: 100%;
+  height: 88px;
+  line-height: 88px;
+  border-radius: 44px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 28px;
+  font-weight: 600;
+  border: none;
+}
+.progress {
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+.mb8 { margin-bottom: 8px; }
+.mb12 { margin-bottom: 12px; }
+.block { display: block; }
+.empty-line { display: block; padding: 8px 0; }
+.rec-kv {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.rec-kv .go {
+  margin-left: auto;
+  color: var(--primary);
+  font-size: 22px;
+  font-weight: 600;
+}
 .head::after {
   content: '';
   position: absolute;

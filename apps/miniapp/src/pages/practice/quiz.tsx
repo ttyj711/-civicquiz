@@ -178,10 +178,10 @@ export default function PracticeQuiz() {
 
   return (
     <View className={'page ' + themeCls}>
-      {/* 顶部：题号进度 + 题型徽章 + 进度条 */}
+      {/* 顶部：题号进度 + 题型徽章 + 百分比 + 进度条 */}
       <View className='row between topbar'>
         <Text className='idx'>第 {idx + 1} / {questions.length} 题</Text>
-        <Text className='type-tag'>{typeLabel(q.type)}</Text>
+        <Text className='type-tag'>{typeLabel(q.type)} · {Math.round(((idx + 1) / questions.length) * 100)}%</Text>
       </View>
       <View className='progress'>
         <View className='progress-fill' style={{ width: `${((idx + 1) / questions.length) * 100}%` }} />
@@ -263,8 +263,16 @@ export default function PracticeQuiz() {
         {idx > 0 && <Button className='nav-btn' hoverClass='button-hover' onClick={() => goNav(idx - 1)}>上一题</Button>}
         <Button className='fav-btn' hoverClass='button-hover' onClick={() => void favToggle()}>{isFav ? '★ 已收藏' : '☆ 收藏'}</Button>
         {idx < questions.length - 1
-          ? <Button className='nav-btn primary' hoverClass='button-hover' onClick={() => goNav(idx + 1)}>下一题</Button>
-          : <Button className='nav-btn primary' hoverClass='button-hover' onClick={() => void doFinish()}>完成</Button>}
+          ? <Button className={`nav-btn primary ${!answered ? 'disabled' : ''}`} hoverClass='button-hover'
+              disabled={!answered || judging}
+              onClick={() => { if (answered) goNav(idx + 1) }}>
+              {answered ? '下一题' : isMulti && curPending.length > 0 ? '请先提交本题' : '请选择答案'}
+            </Button>
+          : <Button className={`nav-btn primary ${!answered ? 'disabled' : ''}`} hoverClass='button-hover'
+              disabled={!answered || judging}
+              onClick={() => { if (answered) void doFinish() }}>
+              {answered ? '完成' : '请选择答案'}
+            </Button>}
       </View>
     </View>
   )

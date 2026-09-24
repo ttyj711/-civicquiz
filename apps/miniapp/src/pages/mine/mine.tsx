@@ -1,45 +1,60 @@
 import { useState } from 'react'
 import Taro, { useDidShow } from '@tarojs/taro'
-import { View, Text } from '@tarojs/components'
-import { fetchStats, fetchUserExams, type UserExamItem, type UserStats } from '../../services/api'
+import { View, Text, Button } from '@tarojs/components'
+import {
+  fetchStats, fetchUserExams, fetchWrong, startPractice,
+  type UserExamItem, type UserStats,
+} from '../../services/api'
 import { ensureLogin } from '../../utils/auth'
 import './mine.scss'
-import { loadTheme, saveTheme, type ThemeKey } from '../../services/theme'
+import { useThemeClass } from '../../services/theme'
 
 const fmtTime = (s: string) => (s ? s.replace('T', ' ').slice(5, 16) : '')
+const TODAY_TARGET = 20
 
 export default function MinePage() {
+  const themeCls = useThemeClass()
   const [nick, setNick] = useState('')
   const [stats, setStats] = useState<UserStats | null>(null)
   const [records, setRecords] = useState<UserExamItem[]>([])
-  const [active, setActive] = useState<UserExamItem[]>([])
-  const [theme, setTheme] = useState<ThemeKey>(() => loadTheme())
-
-  const themeCls = theme === 'b' ? 'theme-b' : ''
-  const switchTheme = (t: ThemeKey) => { saveTheme(t); setTheme(t) }
+  const [ongoing, setOngoing] = useState<UserExamItem | null>(null)
+  const [wrongN, setWrongN] = useState(0)
+  const [starting, setStarting] = useState(false)
 
   const load = async () => {
     try {
       const u = await ensureLogin()
       setNick(u.nickname)
-      const [s, exams] = await Promise.all([fetchStats(), fetchUserExams()])
+      const [s, exams, wrongs] = await Promise.all([fetchStats(), fetchUserExams(), fetchWrong()])
       setStats(s)
-      setRecords(exams)
-      setActive(exams.filter((e) => e.status === 1))
+      setRecords(exams.filter((e) => e.status === 2))
+      setOngoing(exams.find((e) => e.status === 1) || null)
+      setWrongN(wrongs.filter((w) => !w.mastered).length)
     } catch (e) {
       Taro.showToast({ title: (e as Error).message || '加载失败', icon: 'none' })
     }
   }
-  // useDidShow 首次展示即触发，无需再叠加 useEffect（避免首屏双请求）
+
   useDidShow(() => { load() })
 
-  // 金刚区：浅底块 + 语义色数字
-  const entries = [
-    { label: '错题本', value: stats?.wrongCount ?? 0, url: '/pages/wrong/wrong', icon: '📕', color: 'var(--danger)', soft: 'var(--danger-soft)' },
-    { label: '收藏夹', value: stats?.favoriteCount ?? 0, url: '/pages/favorite/favorite', icon: '⭐', color: 'var(--warn)', soft: 'var(--warn-soft)' },
-    { label: '累计答题', value: stats?.totalAnswered ?? 0, url: '', icon: '✏️', color: 'var(--primary)', soft: 'var(--primary-soft)' },
-    { label: '考试次数', value: stats?.examCount ?? 0, url: '', icon: '📝', color: 'var(--info)', soft: 'var(--info-soft)' },
-  ]
+  const startRandom = async () => {
+    if (starting) return
+    setStarting(true)
+    try {
+      const banks = await (await import('../../services/api')).fetchBanks()
+      const bankId = banks[0]?.id
+      if (!bankId) { Taro.showToast({ title: '暂无题库', icon: 'none' }); return }
+      const r = await startPractice({ bankId, mode: 'RANDOM', count: 20 })
+      Taro.navigateTo({ url: `/pages/practice/quiz?practiceId=${r.practiceId}` })
+    } catch (e) {
+      Taro.showToast({ title: (e as Error).message || '开始失败', icon: 'none' })
+    } finally {
+      setStarting(false)
+    }
+  }
+
+  const todayDone = stats?.todayAnswered ?? 0
+  const pct = Math.min(100, Math.round((todayDone / TODAY_TARGET) * 100))
 
   return (
     <View className={'page ' + themeCls}>
@@ -47,70 +62,104 @@ export default function MinePage() {
         <View className='avatar'>{nick?.[0] || '考'}</View>
         <View className='flex1'>
           <Text className='head-title'>{nick || '备考用户'}</Text>
-          <Text className='head-sub'>累计正确率 {stats?.totalAccuracy ?? 0}% · 平均分 {stats?.avgExamScore ?? 0}</Text>
-        </View>
-      </View>
-
-      <View className='card stat-grid'>
-        {entries.map((e) => (
-          <View key={e.label} className={`stat-item ${e.url ? 'clickable' : ''}`}
-            onClick={() => e.url && Taro.navigateTo({ url: e.url })}>
-            <View className='stat-icon' style={{ background: e.soft }}>{e.icon}</View>
-            <Text className='num' style={{ color: e.color }}>{e.value}</Text>
-            <Text className='sub'>{e.label}</Text>
+          <Text className='head-sub'>今日已完成 {todayDone} / {TODAY_TARGET} 题</Text>
+          <View className='progress'>
+            <View className='progress-fill' style={{ width: `${pct}%` }} />
           </View>
-        ))}
+        </View>
+        <View className='gear' onClick={() => Taro.navigateTo({ url: '/pages/mine/settings' })}>⚙</View>
       </View>
 
       <View className='card'>
-        <Text className='title mb16'>外观</Text>
-        <View className='theme-row'>
-          <View className={`theme-opt ${theme === 'a' ? 'on' : ''}`} onClick={() => switchTheme('a')}>
-            <View className='swatch'><View className='sw c1' /><View className='sw c2' /></View>
-            <Text className='theme-name'>舒缓绿</Text>
-            {theme === 'a' && <Text className='theme-check'>✓</Text>}
+        <Text className='title mb12'>核心指标</Text>
+        <View className='metric-grid'>
+          <View className='metric core'>
+            <Text className='metric-num'>{stats?.totalAnswered ?? 0}</Text>
+            <Text className='metric-lab'>累计答题</Text>
           </View>
-          <View className={`theme-opt ${theme === 'b' ? 'on' : ''}`} onClick={() => switchTheme('b')}>
-            <View className='swatch'><View className='sw c3' /><View className='sw c4' /></View>
-            <Text className='theme-name'>暖棕</Text>
-            {theme === 'b' && <Text className='theme-check'>✓</Text>}
+          <View className='metric core'>
+            <Text className='metric-num'>{stats?.totalAccuracy ?? 0}%</Text>
+            <Text className='metric-lab'>正确率</Text>
+          </View>
+          <View className='metric core'>
+            <Text className='metric-num'>{wrongN}</Text>
+            <Text className='metric-lab'>错题</Text>
+          </View>
+        </View>
+        <View className='metric-grid secondary'>
+          <View className='metric'>
+            <Text className='metric-num soft'>{stats?.favoriteCount ?? 0}</Text>
+            <Text className='metric-lab'>收藏</Text>
+          </View>
+          <View className='metric'>
+            <Text className='metric-num soft'>{stats?.examCount ?? 0}</Text>
+            <Text className='metric-lab'>模拟考试</Text>
           </View>
         </View>
       </View>
 
-      {active.length > 0 && (
-        <View className='card'>
-          <Text className='title mb16'>进行中的考试</Text>
-          {active.map((r) => (
-            <View key={r.id} className='row between act-item'
-              onClick={() => Taro.navigateTo({ url: `/pages/exams/quiz?id=${r.examId}` })}>
-              <Text>{r.examName}</Text>
-              <Text className='primary'>继续考试 ›</Text>
-            </View>
-          ))}
+      <View className='card'>
+        <View className='row between mb12'>
+          <Text className='title'>错题复习</Text>
+          <Button className='mini-danger' hoverClass='button-hover'
+            onClick={() => Taro.navigateTo({ url: '/pages/wrong/wrong' })}>去复习</Button>
         </View>
-      )}
+        <Text className='sub'>还有 {wrongN} 道题待巩固</Text>
+      </View>
+
+      <View className='card'>
+        <Text className='title mb12'>继续学习</Text>
+        {ongoing ? (
+          <>
+            <Text className='sub block mb12'>上次做到：{ongoing.examName}</Text>
+            <Button className='btn-primary' hoverClass='button-hover'
+              onClick={() => Taro.navigateTo({ url: `/pages/exams/quiz?id=${ongoing.examId}` })}>
+              继续答题 →
+            </Button>
+          </>
+        ) : (
+          <>
+            <Text className='sub block mb12'>开始今天的练习 · 随机 20 题</Text>
+            <Button className='btn-primary' hoverClass='button-hover' loading={starting} onClick={() => void startRandom()}>
+              开始刷题
+            </Button>
+          </>
+        )}
+      </View>
 
       <View className='card'>
         <Text className='title mb16'>历史考试</Text>
-        {records.slice(0, 10).map((r) => (
-          <View key={r.id} className='row between rec-item'
-            onClick={() => r.status === 2 && Taro.navigateTo({ url: `/pages/exams/review?id=${r.id}` })}>
-            <View className='flex1'>
-              <Text className='rec-name'>{r.examName}</Text>
-              <Text className='sub block'>{fmtTime(r.startTime)}</Text>
+        {records.slice(0, 5).map((r) => {
+          const total = Number(r.totalScore) || 0
+          const score = Number(r.score) || 0
+          const acc = accOf(r)
+          return (
+            <View key={r.id} className='rec-item'
+              onClick={() => Taro.navigateTo({ url: `/pages/exams/review?id=${r.id}` })}>
+              <View className='row between mb8'>
+                <Text className='rec-name'>{r.examName}</Text>
+                <Text className={`rec-score ${total && score >= total * 0.6 ? 'ok' : 'no'}`}>{r.score ?? '-'}</Text>
+              </View>
+              <Text className='sub block mb8'>{fmtTime(r.startTime)}</Text>
+              <View className='rec-kv'>
+                <Text className='sub'>正确率 {acc}%</Text>
+                <Text className='sub'>{r.correctCount + r.wrongCount + r.unansweredCount} 题</Text>
+                <Text className='sub'>{r.duration != null ? `${Math.max(1, Math.round(Number(r.duration) / 60))}′` : '-'}</Text>
+                <Text className='go'>查看详情 →</Text>
+              </View>
             </View>
-            {r.status === 2
-              ? <Text className={`rec-score ${Number(r.score) >= (Number(r.totalScore) || 0) * 0.6 ? 'ok' : 'no'}`}>{r.score} 分</Text>
-              : <Text className='primary'>进行中</Text>}
-          </View>
-        ))}
+          )
+        })}
         {records.length === 0 && (
-          <View className='sub' style={{ display: 'block', padding: '8px 0' }}>
-            还没有考试记录，去「考试」页参加一次吧
-          </View>
+          <Text className='sub empty-line'>还没有考试记录，去「考试」页参加一次吧</Text>
         )}
       </View>
     </View>
   )
+}
+
+// 局部辅助：用对/错/未答推正确率（列表接口未带 accuracy 字段）
+function accOf(r: UserExamItem) {
+  const n = r.correctCount + r.wrongCount + r.unansweredCount
+  return n ? Math.round((r.correctCount / n) * 100) : 0
 }

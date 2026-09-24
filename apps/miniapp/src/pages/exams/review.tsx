@@ -11,6 +11,7 @@ export default function ExamReviewPage() {
   const themeCls = useThemeClass()
   const router = useRouter()
   const ueid = Number(router.params.id || 0)
+  const onlyWrong = router.params.onlyWrong === '1'
   const [detail, setDetail] = useState<UserExamDetail | null>(null)
   const [cur, setCur] = useState(0)
 
@@ -20,9 +21,18 @@ export default function ExamReviewPage() {
   }, [ueid])
 
   if (!detail) return <View className={'page ' + themeCls}><StateView text='加载中…' /></View>
-  const qs = detail.questions || []
-  if (qs.length === 0) return <View className={'page ' + themeCls}><StateView text='暂无题目数据' /></View>
-  const q = qs[cur]
+  const all = detail.questions || []
+  const qs = onlyWrong ? all.filter((q) => !q.correct) : all
+  if (qs.length === 0) {
+    return (
+      <View className={'page ' + themeCls}>
+        <StateView text={onlyWrong ? '没有错题，太棒了' : '暂无题目数据'} />
+        <Button className='nav-btn ghost' hoverClass='button-hover' onClick={() => Taro.navigateBack()}>返回</Button>
+      </View>
+    )
+  }
+  const idx = Math.min(cur, qs.length - 1)
+  const q = qs[idx]
   const ua = q.userAnswer
   const uaArr = ua ? (Array.isArray(ua) ? ua : [ua]) : []
   const ak = q.answerKeys || []
@@ -36,7 +46,7 @@ export default function ExamReviewPage() {
   return (
     <View className={'page ' + themeCls}>
       <View className='row between'>
-        <Text className='sub'>第 {cur + 1} / {qs.length} 题 {q.correct ? '· ✓' : '· ✕'}</Text>
+        <Text className='sub'>第 {idx + 1} / {qs.length} 题{q.correct ? ' · ✓' : ' · ✕'}{onlyWrong ? ' · 错题' : ''}</Text>
         <Text className='score-text'>得分 {Number(q.score) || 0}</Text>
       </View>
       <View className='card'>
@@ -56,9 +66,9 @@ export default function ExamReviewPage() {
       </View>
 
       <View className='row between'>
-        {cur > 0 && <Button className='nav-btn' hoverClass='button-hover' onClick={() => setCur(cur - 1)}>上一题</Button>}
-        {cur < qs.length - 1
-          ? <Button className='nav-btn primary' hoverClass='button-hover' onClick={() => setCur(cur + 1)}>下一题</Button>
+        {idx > 0 && <Button className='nav-btn' hoverClass='button-hover' onClick={() => setCur(idx - 1)}>上一题</Button>}
+        {idx < qs.length - 1
+          ? <Button className='nav-btn primary' hoverClass='button-hover' onClick={() => setCur(idx + 1)}>下一题</Button>
           : <Button className='nav-btn ghost' hoverClass='button-hover' onClick={() => Taro.navigateBack()}>返回</Button>}
       </View>
     </View>

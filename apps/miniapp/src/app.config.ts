@@ -13,6 +13,7 @@ export default defineAppConfig({
     'pages/exams/review',
     'pages/wrong/wrong',
     'pages/favorite/favorite',
+    'pages/mine/settings',
   ],
   window: {
     backgroundTextStyle: 'light',

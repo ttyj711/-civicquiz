@@ -69,3 +69,31 @@
   align-items: center;
   justify-content: center;
 }
+
+.head-idx {
+  font-size: 24px;
+  color: var(--text-sub);
+  flex: 1;
+  text-align: center;
+}
+.exam-progress {
+  height: 6px;
+  background: var(--border);
+}
+.exam-progress-fill {
+  height: 100%;
+  background: var(--primary);
+  transition: width 0.3s ease;
+}
+.q-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.fav-on-stem {
+  color: var(--accent);
+  font-size: 24px;
+}
+.sheet-cell.fav {
+  border: 1px solid var(--accent);
+}

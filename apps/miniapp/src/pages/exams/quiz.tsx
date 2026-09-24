@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import Taro, { useRouter } from '@tarojs/taro'
 import { View, Text, Button, ScrollView } from '@tarojs/components'
-import { saveExamAnswer, startExam, submitExam, type Question } from '../../services/api'
+import {
+  saveExamAnswer, startExam, submitExam, fetchUserExamDetail,
+  addFavorite, removeFavorite, fetchFavorites,
+  type Question,
+} from '../../services/api'
 import QuestionOptions from '../../components/QuestionOptions'
 import StateView from '../../components/StateView'
 import './quiz.scss'
@@ -17,21 +21,31 @@ export default function ExamQuizPage() {
   const [remaining, setRemaining] = useState(0)
   const [showSheet, setShowSheet] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [favs, setFavs] = useState<Set<number>>(new Set())
   const userExamIdRef = useRef<number>(0)
   const submittingRef = useRef(false)
 
-  // 启动考试
   useEffect(() => {
-    startExam(examId).then((r) => {
+    startExam(examId).then(async (r) => {
       userExamIdRef.current = r.userExamId
       setQuestions(r.questions)
       setRemaining(r.remainingSeconds)
+      // 续考：恢复服务端已存作答，避免答题卡被清空
+      try {
+        const detail = await fetchUserExamDetail(r.userExamId)
+        const restored: { [qid: number]: string | string[] } = {}
+        for (const q of detail.questions || []) {
+          if (q.userAnswer != null) restored[q.questionId] = q.userAnswer
+        }
+        setAnswers(restored)
+      } catch { /* 首考无作答可忽略 */ }
       setLoading(false)
       Taro.setNavigationBarTitle({ title: r.exam.name })
     }).catch((e) => {
       Taro.showToast({ title: (e as Error).message || '考试启动失败', icon: 'none' })
       setTimeout(() => Taro.navigateBack(), 1200)
     })
+    fetchFavorites().then((list) => setFavs(new Set(list.map((f) => f.questionId)))).catch(() => {})
   }, [examId])
 
   const doSubmit = async (auto = false) => {
@@ -40,7 +54,7 @@ export default function ExamQuizPage() {
     try {
       const r = await submitExam(examId, { userExamId: userExamIdRef.current })
       Taro.redirectTo({
-        url: `/pages/exams/result?ueid=${r.userExamId}&score=${r.score}&total=${r.totalScore}&correct=${r.correctCount}&wrong=${r.wrongCount}&unanswered=${r.unansweredCount}&accuracy=${r.accuracy}&auto=${auto ? 1 : 0}`,
+        url: `/pages/exams/result?ueid=${r.userExamId}&examId=${examId}&score=${r.score}&total=${r.totalScore}&correct=${r.correctCount}&wrong=${r.wrongCount}&unanswered=${r.unansweredCount}&accuracy=${r.accuracy}&auto=${auto ? 1 : 0}`,
       })
     } catch (e) {
       submittingRef.current = false
@@ -48,14 +62,12 @@ export default function ExamQuizPage() {
     }
   }
 
-  // 倒计时：每秒递减
   useEffect(() => {
     if (remaining <= 0) return
     const timer = setInterval(() => setRemaining((sec) => Math.max(0, sec - 1)), 1000)
     return () => clearInterval(timer)
   }, [remaining > 0])
 
-  // 到 0 自动交卷（副作用与状态更新分离，且只触发一次）
   useEffect(() => {
     if (!loading && remaining === 0 && userExamIdRef.current) void doSubmit(true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,6 +94,19 @@ export default function ExamQuizPage() {
     })
   }
 
+  const favToggle = async () => {
+    const qid = questions[idx]?.id
+    if (!qid) return
+    const next = new Set(favs)
+    try {
+      if (next.has(qid)) { await removeFavorite(qid); next.delete(qid) }
+      else { await addFavorite(qid); next.add(qid) }
+      setFavs(next)
+    } catch (e) {
+      Taro.showToast({ title: (e as Error).message, icon: 'none' })
+    }
+  }
+
   if (loading) return <View className={'page ' + themeCls}><StateView text='加载中…' /></View>
 
   const q = questions[idx]
@@ -89,6 +114,8 @@ export default function ExamQuizPage() {
   const qid = q?.id
   const myAnswer = qid != null ? answers[qid] : undefined
   const isMulti = q?.type === 'MULTIPLE'
+  const isFav = qid != null && favs.has(qid)
+  const pct = questions.length ? Math.round(((idx + 1) / questions.length) * 100) : 0
 
   const optState = (key: string) =>
     myAnswer ? (Array.isArray(myAnswer) ? myAnswer.includes(key) : myAnswer === key) ? 'picked' : '' : ''
@@ -97,11 +124,18 @@ export default function ExamQuizPage() {
     <View className={'exam-page ' + themeCls}>
       <View className='top'>
         <Text className={`timer ${remaining < 300 ? 'danger' : ''}`}>{fmt(remaining)}</Text>
+        <Text className='head-idx'>第 {idx + 1}/{questions.length} 题 · {pct}%</Text>
         <Button className='sheet-btn' hoverClass='button-hover' onClick={() => setShowSheet(true)}>{Object.keys(answers).length}/{questions.length}</Button>
+      </View>
+      <View className='exam-progress'>
+        <View className='exam-progress-fill' style={{ width: `${pct}%` }} />
       </View>
 
       <ScrollView scrollY className='body'>
-        <View className='q-head'><Text>{q.type === 'SINGLE' ? '单选题' : q.type === 'MULTIPLE' ? '多选题' : '判断题'} · 第 {idx + 1}/{questions.length} 题</Text></View>
+        <View className='q-head'>
+          <Text>{q.type === 'SINGLE' ? '单选题' : q.type === 'MULTIPLE' ? '多选题' : '判断题'}</Text>
+          <Text className='fav-on-stem' onClick={() => void favToggle()}>{isFav ? '★ 已收藏' : '☆ 收藏本题'}</Text>
+        </View>
         <View className='q-content'>{q.content}</View>
 
         <QuestionOptions options={q.options} variant='plain'
@@ -124,7 +158,8 @@ export default function ExamQuizPage() {
               {questions.map((x, i) => {
                 const done = x.id in answers
                 return (
-                  <View key={x.id} className={`sheet-cell ${done ? 'done' : ''} ${i === idx ? 'cur' : ''}`} onClick={() => { setIdx(i); setShowSheet(false) }}>
+                  <View key={x.id} className={`sheet-cell ${done ? 'done' : ''} ${i === idx ? 'cur' : ''} ${favs.has(x.id) ? 'fav' : ''}`}
+                    onClick={() => { setIdx(i); setShowSheet(false) }}>
                     {i + 1}
                   </View>
                 )
