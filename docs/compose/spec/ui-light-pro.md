@@ -3,7 +3,7 @@ feature: ui-light-pro
 status: delivered
 updated: 2026-09-24
 branch: main
-commits: c870515..c870515 # working tree; fill after commit
+commits: c870515..03eccc0
 ---
 
 # 轻量专业备考视觉体系
